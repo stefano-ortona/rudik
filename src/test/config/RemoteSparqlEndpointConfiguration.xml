@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<rule_miner xml:space="preserve">
+			<parameters>
+				<sparql_endpoint>http://localhost:8890/sparql</sparql_endpoint>
+			</parameters>
+</rule_miner>
