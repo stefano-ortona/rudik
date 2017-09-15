@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,8 @@ public abstract class SparqlExecutor {
   protected Set<String> targetPrefix;
 
   protected Set<String> relationToAvoid;
+
+  protected Set<String> genericTypes;
 
   protected String graphIri;
 
@@ -148,6 +151,15 @@ public abstract class SparqlExecutor {
       }
     }
 
+    //TODO: read from config file
+    this.genericTypes = Sets.newHashSet();
+    if(config.containsKey(Constant.CONF_GENERIC_TYPES)){
+      final List<String> objects = config.getList(Constant.CONF_GENERIC_TYPES);
+      for(final String object:objects){
+        this.genericTypes.add(object);
+      }
+    }
+
   }
 
   public abstract void executeQuery(String entity,
@@ -157,6 +169,10 @@ public abstract class SparqlExecutor {
       String typeObject, boolean subjectFunction, boolean objectFunction);
 
   public abstract Set<Pair<String,String>> generatePositiveExamples(Set<String >relations,String typeSubject,String typeObject);
+
+  public abstract Set<String> getAllPredicates();
+
+  public abstract Pair<String,String> getPredicateTypes(final String inputPredicate);
 
   /**
    * 
@@ -225,6 +241,15 @@ public abstract class SparqlExecutor {
     String query = this.generatePositiveExampleQuery(relations, typeSubject, typeObject,false);
     query = query.substring(0, query.length()-1)+" "+this.getHornRuleAtomQuery(rules)+" }";
 
+    return query;
+  }
+
+  public String allPredicatesQuery(final String predicateVariable) {
+    String query = "select distinct ?"+predicateVariable+" ";
+    if(this.graphIri != null) {
+      query+= "from "+this.graphIri+" ";
+    }
+    query += "where {?sub ?"+predicateVariable+" ?obj.}";
     return query;
   }
 
@@ -758,6 +783,27 @@ public abstract class SparqlExecutor {
     return null;
   }
 
+  public String predicateSubjectTypeQuery(final String inputPredicate,final String typeName) {
+    return typeQuery(inputPredicate, typeName, true);
+  }
+
+  public String predicateObjectTypeQuery(final String inputPredicate,final String typeName) {
+    return typeQuery(inputPredicate, typeName, false);
+  }
+  
+  private String typeQuery(final String inputPredicate, final String typeName, final boolean subject) {
+    if(this.typePrefix == null || this.typePrefix.isEmpty()) {
+      return null;
+    }
+    final String variable = subject ? "sub" : "obj";
+    String query = StringUtils.join("select ?",typeName," (count(?",variable,") AS ?count) ");
+    if(this.graphIri != null && !this.graphIri.isEmpty()) {
+      query = StringUtils.join(query, "from ",this.graphIri," ");
+    }
+    query = StringUtils.join(query,"where {?sub <",inputPredicate,"> ?obj. ?",variable," <"+this.typePrefix+"> ?",typeName,".} GROUP BY ?",typeName," ORDER BY DESC(?count)");
+    return query;
+  }
+  
   public static Integer compareLiteral(final String stringLiteralOne, final String stringLiteralTwo){
 
     final Set<String> outputRelations = Sets.newHashSet();

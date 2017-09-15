@@ -23,7 +23,7 @@
 <!-- 				<db_location>/home/stefano/Downloads/Dataset/RDF3x_dataset/DBPedia/dbpedia</db_location> -->
 <!-- 				<executable>/home/stefano/Downloads/rdf3x-0.3.7/bin/rdf3xquery</executable> -->
 <!-- 			</parameters> -->
-			<class>asu.edu.neg_rule_miner.sparql.jena.remote.QuerySparqlRemoteEndpoint</class>
+			<class>asu.edu.rule_miner.rudik.sparql.jena.remote.QuerySparqlRemoteEndpoint</class>
 			<parameters>
 				<sparql_endpoint>http://10.218.110.242:8890/sparql</sparql_endpoint>
 			</parameters>

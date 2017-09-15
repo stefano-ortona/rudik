@@ -64,6 +64,10 @@
 			<!--  specify set of relations to not include in the rules generation, inside the tag <relation>R</relation> for each predicate R to avoid -->
 			<relation_to_avoid>
 			</relation_to_avoid>
+			<!-- specify here the too generic types that must be avoided when computing types for relation subject and object -->
+			<generic_types>
+				<type>http://dbpedia.org/ontology/Agent</type>
+			</generic_types>
 			<!-- specify here the relation to be used to retrieve the class of an entity -->
 			<types>
 				<type_prefix>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</type_prefix>

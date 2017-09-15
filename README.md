@@ -9,9 +9,11 @@ The folder src/test/java/asu.edu.rule_miner.rudik.dbpedia contains some example 
 
 System Requirements: Maven 3.2 or above, Java 1.8 or above.
 
-For a full technical report of RuDik and the algorithms involved, please refer to: https://www.dropbox.com/s/8th6r3pngr76la7/rudik_extended.pdf?dl=0.
+For a full technical report of RuDik and the algorithms involved, please refer to: http://www.eurecom.fr/en/publication/5321.
 
 
 # Contacts
 
-Stefano Ortona <stefano.ortona@gmail.com>
+Stefano Ortona	<stefano.ortona@gmail.com>
+Paolo Papotti	<papotti@gmail.com>
+Vamsi Meduri	<vamsikrishna1902@gmail.com>

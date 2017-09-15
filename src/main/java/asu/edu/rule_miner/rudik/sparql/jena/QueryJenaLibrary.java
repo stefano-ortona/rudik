@@ -354,6 +354,58 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   }
 
+  public Set<String> getAllPredicates(){
+    final String query = super.allPredicatesQuery("rel");
+    LOGGER.debug("Executing sparql rule query '{}' on Sparql Endpoint...",query);
+    final long startTime = System.currentTimeMillis();
+    if(this.openResource!=null)
+      this.openResource.close();
+    final ResultSet results = this.executeQuery(query);
+    LOGGER.debug("Query executed in {} seconds.",(System.currentTimeMillis()-startTime)/1000.0);
+    Set<String> allPredicates = Sets.newHashSet();
+    while(results.hasNext()){
+      final QuerySolution oneResult = results.next();
+      final String relation = oneResult.get("rel").toString();
+      if(relation != null && ! relation.isEmpty() && 
+          targetPrefix.stream().anyMatch(prefix -> {return relation.startsWith(prefix);})){
+        allPredicates.add(relation);
+      }
+    }
+    this.closeResources();
+    return allPredicates;
+  }
+
+  public Pair<String,String> getPredicateTypes(final String inputPredicate){
+    String query = super.predicateSubjectTypeQuery(inputPredicate,"type");
+    final String subjType = getType("type", query);
+    query = super.predicateObjectTypeQuery(inputPredicate,"type");
+    final String objType = getType("type", query);
+    this.closeResources();
+    return Pair.of(subjType, objType);
+  }
+  
+  private String getType(final String typeName, final String query) {
+    if(query == null) {
+      return null;
+    }
+    LOGGER.debug("Executing sparql rule query '{}' on Sparql Endpoint...",query);
+    final long startTime = System.currentTimeMillis();
+    if(this.openResource!=null)
+      this.openResource.close();
+    final ResultSet results = this.executeQuery(query);
+    LOGGER.debug("Query executed in {} seconds.",(System.currentTimeMillis()-startTime)/1000.0);
+    //types ordered by popularity
+    while(results.hasNext()){
+      final QuerySolution oneResult = results.next();
+      final String type = oneResult.get(typeName).toString();
+      if(type != null && ! type.isEmpty() && !genericTypes.contains(type) &&
+          targetPrefix.stream().anyMatch(prefix -> {return type.startsWith(prefix);})){
+        return type;
+      }
+    }
+    return null;
+  }
+
   @Override
   public int executeCountQuery(final String inputQuery){
     //get the count variable
