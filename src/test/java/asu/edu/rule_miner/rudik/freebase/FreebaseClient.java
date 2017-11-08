@@ -27,7 +27,7 @@ public class FreebaseClient extends ClientTest{
     final Set<String> relations = Sets.newHashSet("http://rdf.freebase.com/ns/Spouse_(or_domestic_partner)");
     final String typeSubject = "http://rdf.freebase.com/ns/Person";
     final String typeObject = "http://rdf.freebase.com/ns/Person";
-    Assert.assertNotNull(super.executeRudikNegativeRules(relations, typeSubject, typeObject)); 
+    Assert.assertNotNull(super.executeRudikNegativeRules(relations, typeSubject, typeObject,null,null)); 
   }
 
 }

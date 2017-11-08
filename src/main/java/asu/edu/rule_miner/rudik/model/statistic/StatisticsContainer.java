@@ -39,6 +39,7 @@ public class StatisticsContainer {
 	
 	private static Set<Pair<String, String>> generationSample;
 	
+	private static int validationSampleSize;
 
 	public static void initialiseContainer(String currentId){
 		
@@ -52,6 +53,7 @@ public class StatisticsContainer {
 		endTime = 0;
 		negativeSetTime = 0;
 		positiveSetTime = 0;
+		validationSampleSize = 0;
 		outputRules = null;
 
 	}
@@ -135,6 +137,7 @@ public class StatisticsContainer {
 		writer.write("Negative examples generation time: "+negativeSetTime+" seconds.\n");
 		writer.write("Total running time: "+((endTime-startTime)/1000.)+" seconds.\n");
 		writer.write("Generation sample examples: "+generationSample+"\n");
+		writer.write("Validation sample examples size: "+validationSampleSize+"\n");
 		writer.write("Output rules: "+outputRules+"\n");
 //		writer.write("-------------------------"+id+"_"+ConfigurationFacility.getNegativeExampleLimit()+"_"+ endDateFormatted+"-------------------------");
 		writer.write("-------------------------"+id+"_"+endDateFormatted+"-------------------------");
@@ -142,6 +145,10 @@ public class StatisticsContainer {
 
 		writer.flush();
 		writer.close();
+	}
+
+	public static void setValidationExamplesSize(final int valSampleExamplesSize) {
+		validationSampleSize = valSampleExamplesSize;	
 	}
 
 }

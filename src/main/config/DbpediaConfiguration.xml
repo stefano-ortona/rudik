@@ -26,7 +26,7 @@
 <!-- 			</parameters> -->
 			<class>asu.edu.rule_miner.rudik.sparql.jena.remote.QuerySparqlRemoteEndpoint</class>
 			<parameters>
-				<sparql_endpoint>http://10.218.105.56:8890/sparql</sparql_endpoint>
+				<sparql_endpoint>http://localhost:8890/sparql</sparql_endpoint>
 			</parameters>
 <!-- 			<class>asu.edu.neg_rule_miner.sparql.jena.tbd.QueryJenaRDFAPI</class> -->
 <!-- 			<parameters> -->
