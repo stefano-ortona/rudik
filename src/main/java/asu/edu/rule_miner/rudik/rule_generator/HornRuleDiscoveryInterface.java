@@ -20,14 +20,14 @@ public interface HornRuleDiscoveryInterface {
    * @param typeObject
    * @return
    */
-  public List<HornRule> discoverPositiveHornRules(Set<Pair<String,String>> negativeExamples, Set<Pair<String,String>> positiveExamples,
-      Set<String> relations, String typeSubject, String typeObject);
+  public Map<HornRule, Double> discoverPositiveHornRules(Set<Pair<String, String>> negativeExamples,
+      Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject);
 
   /**
-   * Discover positive horn rules by setting parameters for the validation query. If both subjectFuntion and objectFunction are true, then
-   * intersection rescrtive setting is applied. If they are both false, then union setting is applied. If only one of them is true, negative
-   * examples are queried with restriction either only on subject or object
-   * 
+   * Discover positive horn rules by setting parameters for the validation query. If both subjectFuntion and
+   * objectFunction are true, then intersection rescrtive setting is applied. If they are both false, then union setting
+   * is applied. If only one of them is true, negative examples are queried with restriction either only on subject or
+   * object
    * @param negativeExamples
    * @param positiveExamples
    * @param relations
@@ -37,12 +37,12 @@ public interface HornRuleDiscoveryInterface {
    * @param objectFunction
    * @return
    */
-  public List<HornRule> discoverPositiveHornRules(Set<Pair<String,String>> negativeExamples, Set<Pair<String,String>> positiveExamples,
-      Set<String> relations, String typeSubject, String typeObject,boolean subjectFunction, boolean objectFunction);
+  public Map<HornRule, Double> discoverPositiveHornRules(Set<Pair<String, String>> negativeExamples,
+      Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject,
+      boolean subjectFunction, boolean objectFunction);
 
   /**
    * Discover negative rules
-   * 
    * @param negativeExamples
    * @param positiveExamples
    * @param relations
@@ -50,34 +50,29 @@ public interface HornRuleDiscoveryInterface {
    * @param typeObject
    * @return
    */
-  public abstract List<HornRule> discoverNegativeHornRules(Set<Pair<String,String>> negativeExamples, Set<Pair<String,String>> positiveExamples,
-      Set<String> relations, String typeSubject, String typeObject);
+  public abstract Map<HornRule, Double> discoverNegativeHornRules(Set<Pair<String, String>> negativeExamples,
+      Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject);
 
   /**
    * Generate set of positive examples for a given relation with subject and object
-   * 
    * @param relations
    * @param typeSubject
    * @param typeObject
    * @return
    */
-  public Set<Pair<String,String>> generatePositiveExamples(
-      Set<String> relations, String typeSubject, String typeObject);
+  public Set<Pair<String, String>> generatePositiveExamples(Set<String> relations, String typeSubject,
+      String typeObject);
 
   /**
    * Generate negative examples for the input relations
-   * @param relations
-   * 			name of input relations to generate negative examples for
-   * @param typeObject
-   * 			type of the object of the relation
-   * @param typeSubject
-   * 			type of the subject of the relation
-   * @param filtered
-   * 			decide whether returns only a subset of the negative examples, one for each relation
+   * @param relations name of input relations to generate negative examples for
+   * @param typeObject type of the object of the relation
+   * @param typeSubject type of the subject of the relation
+   * @param filtered decide whether returns only a subset of the negative examples, one for each relation
    * @return
    */
-  public Set<Pair<String,String>> generateNegativeExamples(
-      Set<String> relations, String typeSubject, String typeObject, boolean subjectFunction, boolean objectFunction);
+  public Set<Pair<String, String>> generateNegativeExamples(Set<String> relations, String typeSubject,
+      String typeObject, boolean subjectFunction, boolean objectFunction);
 
   /**
    * By default generate negaitive examples with union strategy
@@ -86,7 +81,9 @@ public interface HornRuleDiscoveryInterface {
    * @param typeObject
    * @return
    */
-  public Set<Pair<String,String>> generateNegativeExamples(Set<String> relations, String typeSubject, String typeObject);
+  public Set<Pair<String, String>> generateNegativeExamples(Set<String> relations, String typeSubject,
+      String typeObject);
+
   /**
    * Get examples from the KB by executing the input query
    * @param query
@@ -94,19 +91,19 @@ public interface HornRuleDiscoveryInterface {
    * @param object
    * @return
    */
-  public Set<Pair<String,String>> getKBExamples(String query, String subject, String object);
+  public Set<Pair<String, String>> getKBExamples(String query, String subject, String object);
 
   /**
-   * Read examples from an input file.
-   * File must contain for each line a pair subject object separated with a tab character
+   * Read examples from an input file. File must contain for each line a pair subject object separated with a tab
+   * character
    * @param inputFile
    * @return
    */
-  public Set<Pair<String,String>> readExamples(File inputFile);
+  public Set<Pair<String, String>> readExamples(File inputFile);
 
   /**
-   * Discover the first maxRulesNumber positive rules according to a ranking based on score, and returns the rules with their score
-   * 
+   * Discover the first maxRulesNumber positive rules according to a ranking based on score, and returns the rules with
+   * their score
    * @param negativeExamples
    * @param positiveExamples
    * @param relations
@@ -115,13 +112,13 @@ public interface HornRuleDiscoveryInterface {
    * @param maxRulesNumber
    * @return
    */
-  Map<HornRule,Double> discoverAllPositiveHornRules(Set<Pair<String, String>> negativeExamples,
+  Map<HornRule, Double> discoverAllPositiveHornRules(Set<Pair<String, String>> negativeExamples,
       Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject,
       int maxRulesNumber);
-  
+
   /**
-   * Discover the first maxRulesNumber negative rules according to a ranking based on score, and returns the rules with their score
-   * 
+   * Discover the first maxRulesNumber negative rules according to a ranking based on score, and returns the rules with
+   * their score
    * @param negativeExamples
    * @param positiveExamples
    * @param relations
@@ -130,8 +127,23 @@ public interface HornRuleDiscoveryInterface {
    * @param maxRulesNumber
    * @return
    */
-  Map<HornRule,Double> discoverAllNegativeHornRules(Set<Pair<String, String>> negativeExamples,
+  Map<HornRule, Double> discoverAllNegativeHornRules(Set<Pair<String, String>> negativeExamples,
       Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject,
       int maxRulesNumber);
+
+  /**
+   * Instantiate a given horn rule over the KB. If it is a positive rule, the method will return newly discovered facts,
+   * while if it is a negative rule the method will return potential errors on the KB The method will return a full
+   * instantiation of the rule, where each element of the list is a list of pairs, where each pair contains the name of
+   * the variable in the rule paired with its entity instantiation on the KB
+   * @param targetPredicates
+   * @param rule
+   * @param subjType
+   * @param objType
+   * @param positive
+   * @return
+   */
+  List<List<Pair<String, String>>> instantiateRule(final Set<String> targetPredicates, final HornRule rule,
+      final String subjType, final String objType, boolean positive);
 
 }

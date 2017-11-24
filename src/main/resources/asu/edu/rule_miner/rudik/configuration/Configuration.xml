@@ -6,15 +6,15 @@
 		<runtime>
 			<num_threads>1</num_threads>
 			<!-- max number of atoms in the output rule -->
-			<max_rule_lenght>3</max_rule_lenght>
+			<max_rule_lenght>2</max_rule_lenght>
 			<!-- if a rule covers more than validation_threshold*(validation set size) validation examples, then it is discared.
 			Default 0.2 -->
 			<score>
 				<validation_threshold>0.2</validation_threshold>
 				<!-- set weights for the score computation. Default 0.3, 0.6, 0.1 -->
 				<alpha>0.3</alpha>
-				<beta>0.6</beta>
-				<gamma>0.1</gamma>
+				<beta>0.7</beta>
+				<gamma>0</gamma>
 			</score>
 		</runtime>
 		<!-- sparql engine endpoint specific parameters -->
@@ -24,49 +24,18 @@
 <!-- 				<db_location>/home/stefano/Downloads/Dataset/RDF3x_dataset/DBPedia/dbpedia</db_location> -->
 <!-- 				<executable>/home/stefano/Downloads/rdf3x-0.3.7/bin/rdf3xquery</executable> -->
 <!-- 			</parameters> -->
-			<class>asu.edu.neg_rule_miner.sparql.jena.remote.QuerySparqlRemoteEndpoint</class>
+			<class>asu.edu.rule_miner.rudik.sparql.jena.remote.QuerySparqlRemoteEndpoint</class>
 			<parameters>
 				<sparql_endpoint>http://localhost:8890/sparql</sparql_endpoint>
 			</parameters>
-<!-- 			<class>asu.edu.neg_rule_miner.sparql.jena.tbd.QueryJenaRDFAPI</class> -->
-<!-- 			<parameters> -->
-<!-- 				<directory>/Users/sortona/Documents/KDR/Data/DBPedia/jena</directory> -->
-<!-- 			</parameters> -->
-<!-- 			<class>asu.edu.neg_rule_miner.sparql.relational.QueryRelationalDatabase</class> -->
-<!-- 			<parameters> -->
-<!-- 				<sparql_back_up> -->
-<!-- 					<class>asu.edu.neg_rule_miner.sparql.jena.remote.QuerySparqlRemoteEndpoint</class> --> -->
-<!-- 					<parameters> -->
-<!-- 						<sparql_endpoint>http://localhost:8890/sparql</sparql_endpoint> -->
-<!-- 					</parameters> -->
-<!-- 				</sparql_back_up> -->
-<!-- 			</parameters> -->
-			<graph_iri>http://dbpedia.org</graph_iri>
-			<!-- prefix to be specified in the sparql query -->
-			<relation_prefix>
-				<prefix>
-					<name>rdf</name>
-					<uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#</uri>
-				</prefix>
-				<prefix>
-					<name>dbp</name>
-					<uri>http://dbpedia.org/property/</uri>
-				</prefix>
-				<prefix>
-					<name>dbo</name>
-					<uri>http://dbpedia.org/ontology/</uri>
-				</prefix>
-			</relation_prefix>
 			<!-- target relation prefix. Only relations starting with prefixes specified here will be induced in rules -->
 			<relation_target_prefix>
-				<prefix>http://dbpedia.org/ontology/</prefix>
 			</relation_target_prefix>
 			<!--  specify set of relations to not include in the rules generation, inside the tag <relation>R</relation> for each predicate R to avoid -->
 			<relation_to_avoid>
 			</relation_to_avoid>
 			<!-- specify here the too generic types that must be avoided when computing types for relation subject and object -->
 			<generic_types>
-				<type>http://dbpedia.org/ontology/Agent</type>
 			</generic_types>
 			<!-- specify here the relation to be used to retrieve the class of an entity -->
 			<types>
@@ -75,15 +44,15 @@
 			<limits>
 				<edges>
 					<!-- Limit incoming edges for an entity. -1 for unlimited -->
-					<subject>-1</subject>
+					<subject>100</subject>
 					<!-- Limit outgoing edges for an entity. -1 for unlimited -->
-					<object>-1</object>
+					<object>100</object>
 				</edges>
 				<examples>
 					<!-- Limit positive examples. -1 for unlimited -->
-					<positive>-1</positive>
+					<positive>1000</positive>
 					<!-- Limit negative examples. -1 for unlimited -->
-					<negative>-1</negative>
+					<negative>1000</negative>
 				</examples>
 			</limits>
 			<include_literals>true</include_literals>

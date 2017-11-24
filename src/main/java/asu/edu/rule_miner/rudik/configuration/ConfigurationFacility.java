@@ -1,6 +1,8 @@
 package asu.edu.rule_miner.rudik.configuration;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -90,6 +92,68 @@ public class ConfigurationFacility {
 
   public static void resetConfiguration() {
     initialiseConfiguration(Constant.CONF_FILE);
+  }
+
+  public static void setGraphGenericTypes(final List<String> genericTypes) {
+    ConfigurationParameterConfigurator.setGraphGenericTypes(genericTypes);
+  }
+
+  public static void setSparqlEndpoint(final String endpoint) {
+    ConfigurationParameterConfigurator.setSparqlEndpoint(endpoint);
+  }
+
+  public static void setMaxRuleLength(int maxRuleLen) {
+    ConfigurationParameterConfigurator.setMaxRuleLength(maxRuleLen);
+  }
+
+  public static void setAlphaBetaParameter(double alpha, double beta) {
+    if ((alpha + beta) != 1) {
+      LOGGER.warn("Trying to set values of alpha and beta to '{}' and '{}' that do not add up to 1.0, skipping.", alpha,
+          beta);
+    }
+    ConfigurationParameterConfigurator.setAlphaParameter(alpha);
+    ConfigurationParameterConfigurator.setBetaParameter(beta);
+  }
+
+  public static void setRelationToAvoid(List<String> avoidRelation) {
+    ConfigurationParameterConfigurator.setRelationToAvoid(avoidRelation);
+  }
+
+  public static void setDisequalityRelation(int disequality) {
+    ConfigurationParameterConfigurator.setDisequalityRelation(disequality);
+  }
+
+  public static void setIncomingEdgesLimit(int incomingEdgesLimit) {
+    ConfigurationParameterConfigurator.setIncomingEdgesLimit(incomingEdgesLimit);
+  }
+
+  public static void setGraphIri(String graphIri) {
+    ConfigurationParameterConfigurator.setGraphIri(graphIri);
+  }
+
+  public static void setIncludeLiteral(boolean includeLiteral) {
+    ConfigurationParameterConfigurator.setIncludeLiteral(includeLiteral);
+  }
+
+  public static void setOutgoingEdgesLimit(int outgoingEdgesLimit) {
+    ConfigurationParameterConfigurator.setOutgoingEdgesLimit(outgoingEdgesLimit);
+  }
+
+  /**
+   * Set graph prefixes to be used when executing SPARQL queries
+   * name2uri is a map where the key is the name of the prefix and the value is the URI of the prefix
+   * @param name2uri
+   */
+  public static void setGraphPrefixes(Map<String, String> name2uri) {
+    ConfigurationParameterConfigurator.setGraphPrefixes(name2uri);
+  }
+
+  public static void setRelationTargetPrefix(List<String> targetPrefix) {
+    ConfigurationParameterConfigurator.setTargetPrefix(targetPrefix);
+  }
+
+  public static void setTypeRelationPrefixes(String typePrefix) {
+    ConfigurationParameterConfigurator.setTypeRelationPrefix(typePrefix);
   }
 
 }

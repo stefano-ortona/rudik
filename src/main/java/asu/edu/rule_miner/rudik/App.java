@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -413,23 +414,23 @@ public class App {
     /*
      * ConfigurationFacility.setSubjectLimit(1); ConfigurationFacility.setObjectLimit(1); String id =
      * relations+"_"+1+"_"+1;
-     * 
+     *
      * StatisticsContainer.initialiseContainer(id);
-     * 
-     * 
+     *
+     *
      * Set<Pair<String,String>> negativeExamples = naive.generateNegativeExamples(relations, typeSubject, typeObject,
      * false, false);
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * Set<Pair<String,String>> positiveExamples = naive.generatePositiveExamples(relations, typeSubject, typeObject);
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * naive.discoverNegativeHornRules(negativeExamples,positiveExamples,relations,typeSubject,typeObject);
-     * 
+     *
      * StatisticsContainer.printStatistics();
-     * 
+     *
      */ // naive.discoverPositiveHornRules(negativeExamples, positiveExamples, relations, typeSubject, typeObject, true,
         // false);
 
@@ -494,11 +495,11 @@ public class App {
         final Set<Pair<String, String>> positiveExamples = naive.generatePositiveExamples(currentRelations, typeSubject,
             typeObject);
 
-        final List<HornRule> output = naive.discoverPositiveHornRules(negativeExamples, positiveExamples,
+        final Map<HornRule, Double> output = naive.discoverPositiveHornRules(negativeExamples, positiveExamples,
             currentRelations, typeSubject, typeObject, false, false);
 
         relation2runningTime.put(relation, (System.currentTimeMillis() - startTime));
-        relation2output.put(relation, output);
+        relation2output.put(relation, Lists.newArrayList(output.keySet()));
       }
 
       catch (final Exception e) {

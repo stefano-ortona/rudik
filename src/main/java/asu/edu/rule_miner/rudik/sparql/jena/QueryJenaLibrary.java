@@ -1,6 +1,7 @@
 package asu.edu.rule_miner.rudik.sparql.jena;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +16,8 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
 
 import asu.edu.rule_miner.rudik.model.horn_rule.RuleAtom;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Edge;
@@ -331,10 +334,20 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
     if (rules.size() == 0) {
       return Sets.newHashSet();
     }
-    final String hornRuleQuery = super.generateHornRuleQuery(rules, typeSubject, typeObject);
+    final String hornRuleQuery = super.generateHornRuleQuery(rules, typeSubject, typeObject, false);
 
     return executeSubjectObjectQuery(hornRuleQuery, null);
+  }
 
+  @Override
+  public List<List<Pair<String, String>>> instantiateHornRule(Set<String> targetPredicates, Set<RuleAtom> rules,
+      final String subjType, final String objType, boolean positive) {
+    if (rules.size() == 0) {
+      return Lists.newArrayList();
+    }
+    final String hornRuleQuery = super.generateHornRuleQueryInstantiation(targetPredicates, rules, subjType, objType,
+        true, positive);
+    return executeStarQuery(hornRuleQuery);
   }
 
   @Override
@@ -343,7 +356,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
     if (rules.size() == 0) {
       return Sets.newHashSet();
     }
-    String hornRuleQuery = super.generateHornRuleQuery(rules, typeSubject, typeObject);
+    String hornRuleQuery = super.generateHornRuleQuery(rules, typeSubject, typeObject, false);
     hornRuleQuery = hornRuleQuery.replaceAll("WHERE \\{", "WHERE {" + queryRestriction + " ");
 
     return executeSubjectObjectQuery(hornRuleQuery, null);
@@ -381,6 +394,34 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   }
 
+  private List<List<Pair<String, String>>> executeStarQuery(final String query) {
+    if (query == null) {
+      return Lists.newArrayList();
+    }
+
+    LOGGER.debug("Executing sparql rule query '{}' on Sparql Endpoint...", query);
+    final long startTime = System.currentTimeMillis();
+    if (this.openResource != null) {
+      this.openResource.close();
+    }
+    final ResultSet results = this.executeQuery(query);
+    LOGGER.debug("Query executed in {} seconds.", (System.currentTimeMillis() - startTime) / 1000.0);
+    final List<List<Pair<String, String>>> allBindings = Lists.newLinkedList();
+    while (results.hasNext()) {
+      final List<Pair<String, String>> currentBinding = Lists.newArrayList();
+      final QuerySolution oneResult = results.next();
+      final Iterator<String> variables = oneResult.varNames();
+      while (variables.hasNext()) {
+        final String oneVar = variables.next();
+        final String value = oneResult.get(oneVar).toString();
+        currentBinding.add(Pair.of(oneVar, value));
+      }
+      allBindings.add(currentBinding);
+    }
+    this.closeResources();
+    return allBindings;
+  }
+
   @Override
   public Set<String> getAllPredicates() {
     final String query = super.allPredicatesQuery("rel");
@@ -395,9 +436,10 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
     while (results.hasNext()) {
       final QuerySolution oneResult = results.next();
       final String relation = oneResult.get("rel").toString();
-      if ((relation != null) && !relation.isEmpty() && targetPrefix.stream().anyMatch(prefix -> {
-        return relation.startsWith(prefix);
-      })) {
+      if ((relation != null) && !relation.isEmpty()
+          && ((targetPrefix == null) || targetPrefix.stream().anyMatch(prefix -> {
+            return relation.startsWith(prefix);
+          }))) {
         allPredicates.add(relation);
       }
     }
@@ -431,9 +473,9 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
       final QuerySolution oneResult = results.next();
       final String type = oneResult.get(typeName).toString();
       if ((type != null) && !type.isEmpty() && !genericTypes.contains(type)
-          && targetPrefix.stream().anyMatch(prefix -> {
+          && ((targetPrefix == null) || targetPrefix.stream().anyMatch(prefix -> {
             return type.startsWith(prefix);
-          })) {
+          }))) {
         return type;
       }
     }
