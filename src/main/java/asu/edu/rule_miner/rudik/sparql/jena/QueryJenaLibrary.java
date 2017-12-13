@@ -62,12 +62,15 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
     final ResultSet results = this.executeQuery(sparqlQuery);
 
     if (!results.hasNext()) {
-      LOGGER.debug("Query '{}' returned an empty result!", sparqlQuery);
+      LOGGER.debug("Query '{}' returned an empty result.", sparqlQuery);
     }
 
     final long totalTime = System.currentTimeMillis() - startTime;
-    if (totalTime > 50000) {
-      LOGGER.debug("Query '{}' took {} seconds to complete.", sparqlQuery, totalTime / 1000.);
+    final String logMessage = "Query '{}' took {} seconds to complete.";
+    if (totalTime > MAX_QUERY_RUN_TIME) {
+      LOGGER.warn(logMessage, sparqlQuery, totalTime / 1000.);
+    } else {
+      LOGGER.debug(logMessage, sparqlQuery, totalTime / 1000.);
     }
 
     final TripleFilterFunctional tripFil = new TripleFilterFunctional();
@@ -376,7 +379,13 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
       this.openResource.close();
     }
     final ResultSet results = this.executeQuery(query);
-    LOGGER.debug("Query executed in {} seconds.", (System.currentTimeMillis() - startTime) / 1000.0);
+    final long totalTime = System.currentTimeMillis() - startTime;
+    final String logMessage = "Query '{}' took {} seconds to complete.";
+    if (totalTime > MAX_QUERY_RUN_TIME) {
+      LOGGER.warn(logMessage, query, totalTime / 1000.);
+    } else {
+      LOGGER.debug(logMessage, query, totalTime / 1000.);
+    }
 
     while (results.hasNext()) {
 

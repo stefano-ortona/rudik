@@ -35,6 +35,7 @@ public class QuerySparqlRemoteEndpoint extends QueryJenaLibrary {
   @Override
   public ResultSet executeQuery(String sparqlQuery) {
     final QueryExecution qexec = QueryExecutionFactory.sparqlService(this.sparqlEndpoint, sparqlQuery);
+    qexec.setTimeout(MAX_QUERY_RUN_TIME);
     final ResultSet results = qexec.execSelect();
     this.openResource = qexec;
     return results;

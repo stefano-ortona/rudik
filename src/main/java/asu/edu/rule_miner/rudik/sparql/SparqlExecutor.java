@@ -59,6 +59,9 @@ public abstract class SparqlExecutor {
 
   protected boolean includeLiterals = true;
 
+  // max runtime for a sparql query in milliseconds, make it configurable
+  protected long MAX_QUERY_RUN_TIME = 20000;
+
   @SuppressWarnings("unchecked")
   public SparqlExecutor(final Configuration config) {
 
