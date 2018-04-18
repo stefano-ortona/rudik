@@ -22,7 +22,7 @@ import asu.edu.rule_miner.rudik.rule_generator.DynamicPruningRuleDiscovery;
  * Unit test for simple App.
  */
 public class ClientTest {
-  private final DynamicPruningRuleDiscovery rudik = new DynamicPruningRuleDiscovery();
+  protected final DynamicPruningRuleDiscovery rudik = new DynamicPruningRuleDiscovery();
   private final static Logger LOGGER = LoggerFactory.getLogger(ClientTest.class.getName());
 
   protected Map<HornRule, Double> executeRudikNegativeRules(final Set<String> relationNames, final String subjectType,

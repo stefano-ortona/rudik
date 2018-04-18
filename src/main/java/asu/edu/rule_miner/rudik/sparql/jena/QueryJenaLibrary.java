@@ -69,8 +69,6 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
     final String logMessage = "Query '{}' took {} seconds to complete.";
     if (totalTime > MAX_QUERY_RUN_TIME) {
       LOGGER.warn(logMessage, sparqlQuery, totalTime / 1000.);
-    } else {
-      LOGGER.debug(logMessage, sparqlQuery, totalTime / 1000.);
     }
 
     final TripleFilterFunctional tripFil = new TripleFilterFunctional();
