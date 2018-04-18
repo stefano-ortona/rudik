@@ -80,9 +80,9 @@
 				</edges>
 				<examples>
 					<!-- Limit positive examples. -1 for unlimited -->
-					<positive>-1</positive>
+					<positive>10</positive>
 					<!-- Limit negative examples. -1 for unlimited -->
-					<negative>-1</negative>
+					<negative>10</negative>
 				</examples>
 			</limits>
 			<include_literals>true</include_literals>

@@ -765,7 +765,7 @@ public abstract class SparqlExecutor {
       if (firstDouble == null) {
         return null;
       }
-      if (firstDouble == secondDouble) {
+      if (firstDouble.equals(secondDouble)) {
         outputRelations.add(Constant.EQUAL_REL);
         outputRelations.add(Constant.LESS_EQUAL_REL);
         outputRelations.add(Constant.GREATER_EQUAL_REL);
