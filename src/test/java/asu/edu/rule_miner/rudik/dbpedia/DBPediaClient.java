@@ -38,9 +38,9 @@ public class DBPediaClient extends ClientTest {
 
   @Test
   public void testSpouseNegative() {
-    final Set<String> relations = Sets.newHashSet("http://dbpedia.org/ontology/ceremonialCounty");
-    final String typeSubject = "http://dbpedia.org/ontology/PopulatedPlace";
-    final String typeObject = "http://dbpedia.org/ontology/Region";
+    final Set<String> relations = Sets.newHashSet("http://dbpedia.org/ontology/spouse");
+    final String typeSubject = "http://dbpedia.org/ontology/Person";
+    final String typeObject = "http://dbpedia.org/ontology/Person";
     Assert.assertNotNull(super.executeRudikNegativeRules(relations, typeSubject, typeObject, null, null));
   }
 
