@@ -24,7 +24,7 @@ For a full technical report of RuDik and the algorithms involved, please refer t
 
 - Checkout git project `git clone git@github.com:stefano-ortona/rudik.git`
 - Install all maven dependency:
-  - Inside the project folder, run `mvn -U clean install`
+  - Inside the project folder, run `mvn -U clean install -DskipTests`
 
 If the above commands run without errors, then you are ready to run your first example
 
