@@ -75,6 +75,6 @@ The APIs we currently expose are defined in the interface `asu.edu.rule_miner.ru
 
 # Contacts
 
-1.[Stefano Ortona]	(mailto:stefano.ortona@gmail.com)
-2.[Paolo Papotti](mailto:paolo.papotti@eurecom.fr)
-3.[Vamsi Meduri](mailto.vamsikrishna1902@gmail.com)
+1. [Stefano Ortona](mailto:stefano.ortona@gmail.com)
+2. [Paolo Papotti](mailto:paolo.papotti@eurecom.fr)
+3. [Vamsi Meduri](mailto.vamsikrishna1902@gmail.com)
