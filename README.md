@@ -88,7 +88,8 @@ wget http://downloads.dbpedia.org/2016-10/core/geo_coordinates_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/persondata_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/instance_types_transitive_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/specific_mappingbased_properties_en.ttl.bz2
-wget http://downloads.dbpedia.org/2016-10/core/infobox_properties_en.ttl.bz2```
+wget http://downloads.dbpedia.org/2016-10/core/infobox_properties_en.ttl.bz2
+```
 
 - STEP 3 : Uncompress the files. In case you don't have bzip2 install it using "sudo apt install bzip2" The following commands will delete the bz2 files after uncompressing. In case you want to preserve the zip files, issue the command as bzip2 -dk <filename>.bz2
 
@@ -96,13 +97,15 @@ wget http://downloads.dbpedia.org/2016-10/core/infobox_properties_en.ttl.bz2```
 bzip2 -d persondata_en.ttl.bz2
 bzip2 -d instance_types_transitive_en.ttl.bz2
 bzip2 -d specific_mappingbased_properties_en.ttl.bz2
-bzip2 -d infobox_properties_en.ttl.bz2```
+bzip2 -d infobox_properties_en.ttl.bz2
+```
 
  - STEP 4 : Modify the virtuoso.ini file with the filepath to the ttl files and set the number of buffers based on available RAM. Copy the virtuoso.ini file into the virtuoso db directory
 
 ```sudo cp /etc/virtuoso-opensource-6.1/virtuoso.ini /var/lib/virtuoso-opensource-6.1/db/virtuoso.ini
 sudo cd /var/lib/virtuoso-opensource-6.1/db
-sudo vi virtuoso.ini```
+sudo vi virtuoso.ini
+```
 
 Copy the path to the ttl files and append that to the DirsAllowed. For example, if home directory is /home/rudik, copy the ttl files as following:  DirsAllowed = ., /usr/share/virtuoso-opensource-6.1/vad, /home/rudik/dbpedia_ttls
 
@@ -110,11 +113,13 @@ The default number of buffers is 10000 and the maximum dirty buffers are set to 
 
 - STEP 5: Stop the virtuoso server if it is already running by searching for the virtuoso server as "ps -ef | grep virtuoso-t". Start the virtuoso server with the updated settings in virtuoso.ini
 
-```sudo /usr/bin/virtuoso-t```
+```sudo /usr/bin/virtuoso-t
+```
 
 - STEP 6: In a new terminal tab, start the virtuoso client
 
-```sudo /usr/bin/isql-vt```
+```sudo /usr/bin/isql-vt
+```
 
 - STEP 7: In the SQL prompt, issue the following sparql command to load the triples from the ttl files into the virtuoso server
 
@@ -125,7 +130,8 @@ Connected to OpenLink Virtuoso
 Driver: 06.01.3127 OpenLink Virtuoso ODBC Driver
 
 Done. -- 17 msec.
-SQL> rdf_loader_run();```
+SQL> rdf_loader_run();
+```
 
 Once the above steps are completed, the loader finishes and you are set to issue sparql queries in the client SQL terminal.
 
