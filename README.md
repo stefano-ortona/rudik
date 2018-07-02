@@ -69,7 +69,7 @@ Look inside the folder `src/main/config`, there you can find other configuration
 - after loading the triples, access the Sparql endpoint at http://localhost:8890/sparql
 - update the configuration file with the new Sparql endpoint and run your test cases
 
-# Detailed instruction to install Virtuoso with DBpedia files:
+# Install Virtuoso with DBpedia files
 
 The following steps may prompt for a sudo password and may need to be written in a virtuoso SQL client terminal.
 
