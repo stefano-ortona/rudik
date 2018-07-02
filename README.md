@@ -113,13 +113,11 @@ The default number of buffers is 10000 and the maximum dirty buffers are set to 
 
 - STEP 5: Stop the virtuoso server if it is already running by searching for the virtuoso server as "ps -ef | grep virtuoso-t". Start the virtuoso server with the updated settings in virtuoso.ini
 
-```sudo /usr/bin/virtuoso-t
-```
+```sudo /usr/bin/virtuoso-t```
 
 - STEP 6: In a new terminal tab, start the virtuoso client
 
-```sudo /usr/bin/isql-vt
-```
+```sudo /usr/bin/isql-vt```
 
 - STEP 7: In the SQL prompt, issue the following sparql command to load the triples from the ttl files into the virtuoso server
 
