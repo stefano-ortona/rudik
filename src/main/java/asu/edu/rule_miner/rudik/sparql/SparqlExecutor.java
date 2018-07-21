@@ -609,11 +609,12 @@ public abstract class SparqlExecutor {
 
   public String generateHornRuleQuery(final Set<RuleAtom> rules, final String typeSubject, final String typeObject,
       boolean selectAll) {
-    return generateHornRuleQueryInstantiation(null, rules, typeSubject, typeObject, selectAll, false);
+    return generateHornRuleQueryInstantiation(null, rules, typeSubject, typeObject, selectAll, false, -1);
   }
 
   public String generateHornRuleQueryInstantiation(final Set<String> targetPredicates, final Set<RuleAtom> rules,
-      final String typeSubject, final String typeObject, boolean selectAll, boolean positive) {
+      final String typeSubject, final String typeObject, boolean selectAll, boolean positive,
+      int maxInstantiationNumber) {
 
     if (!(rules.size() > 0)) {
       return null;
@@ -672,6 +673,10 @@ public abstract class SparqlExecutor {
       }
     }
     query.append("}");
+    // check if there is a limit to set
+    if (maxInstantiationNumber > 0) {
+      query.append(" LIMIT ").append(maxInstantiationNumber);
+    }
     return query.toString();
   }
 
@@ -1030,6 +1035,6 @@ public abstract class SparqlExecutor {
   }
 
   public abstract List<List<Pair<String, String>>> instantiateHornRule(Set<String> targetPredicates,
-      Set<RuleAtom> rules, String subjType, String objType, boolean positive);
+      Set<RuleAtom> rules, String subjType, String objType, boolean positive, int maxInstantiationNumber);
 
 }

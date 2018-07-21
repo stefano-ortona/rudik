@@ -240,7 +240,8 @@ public abstract class HornRuleDiscovery implements HornRuleDiscoveryInterface {
    * Read the sparql executor from configuration file and instantiate it
    * @return
    */
-  protected SparqlExecutor getSparqlExecutor() {
+  @Override
+  public SparqlExecutor getSparqlExecutor() {
 
     if (!ConfigurationFacility.getConfiguration().containsKey(Constant.CONF_SPARQL_ENGINE)) {
       throw new RuleMinerException("Sparql engine parameters not found in the configuration file.", LOGGER);

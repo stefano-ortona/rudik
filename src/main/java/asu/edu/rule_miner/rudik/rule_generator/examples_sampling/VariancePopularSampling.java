@@ -291,7 +291,7 @@ public class VariancePopularSampling {
 		for(Edge<String> oneEdge : edges){
 			oneEdge.getNodeSource();
 
-			oneEdge.getNodeEnd();
+			oneEdge.getNodeBottom();
 
 			//name of the relation
 			oneEdge.getLabel();

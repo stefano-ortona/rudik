@@ -7,7 +7,9 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import asu.edu.rule_miner.rudik.api.model.HornRuleInstantiation;
 import asu.edu.rule_miner.rudik.model.horn_rule.HornRule;
+import asu.edu.rule_miner.rudik.sparql.SparqlExecutor;
 
 public interface HornRuleDiscoveryInterface {
 
@@ -131,11 +133,14 @@ public interface HornRuleDiscoveryInterface {
       Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject,
       int maxRulesNumber);
 
+  SparqlExecutor getSparqlExecutor();
+
   /**
    * Instantiate a given horn rule over the KB. If it is a positive rule, the method will return newly discovered facts,
    * while if it is a negative rule the method will return potential errors on the KB The method will return a full
-   * instantiation of the rule, where each element of the list is a list of pairs, where each pair contains the name of
-   * the variable in the rule paired with its entity instantiation on the KB
+   * instantiation of the rule, where each element of the list is a rule atom instantiated over the KB (rather that containing
+   * generic variables)
+   *
    * @param targetPredicates
    * @param rule
    * @param subjType
@@ -143,7 +148,7 @@ public interface HornRuleDiscoveryInterface {
    * @param positive
    * @return
    */
-  List<List<Pair<String, String>>> instantiateRule(final Set<String> targetPredicates, final HornRule rule,
-      final String subjType, final String objType, boolean positive);
+  List<HornRuleInstantiation> instantiateRule(Set<String> targetPredicates, HornRule rule, String subjType,
+      String objType, boolean positive, int maxInstantiationNumber);
 
 }

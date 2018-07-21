@@ -101,7 +101,7 @@ public class MultipleGraphHornRule<T> extends HornRule{
 			Set<Edge<T>> neighbors = g.getNeighbours(currentNode);
 			for(Edge<T> e:neighbors){
 				boolean isArtifical = e.isArtificial();
-				T endNode = e.getNodeEnd();
+				T endNode = e.getNodeBottom();
 				String label = e.getLabel();
 				for(Pair<T,T> oneCoveredExample:currentCoveredExamples){
 					boolean isNewVariable = false;
@@ -288,7 +288,7 @@ public class MultipleGraphHornRule<T> extends HornRule{
 					if(!oneNeighbour.getLabel().equals(relation) || oneNeighbour.isArtificial()!=isInverse)
 						continue;
 
-					T endNode = oneNeighbour.getNodeEnd();
+					T endNode = oneNeighbour.getNodeBottom();
 					//for the current node get the not covered examples
 					for(Pair<T,T> oneExample:currentNode2examples.get(oneNode)){
 						String currentNodeVariable = node2example2variable.get(endNode)!=null ? node2example2variable.get(endNode).get(oneExample) : null;
@@ -389,7 +389,7 @@ public class MultipleGraphHornRule<T> extends HornRule{
 			neighbours = this.g.getNeighbours(singleObligedNode);
 
 			for(Edge<T> oneNeighbour:neighbours){
-				T endNode = oneNeighbour.getNodeEnd();
+				T endNode = oneNeighbour.getNodeBottom();
 				if(!this.currentNode2examples.containsKey(endNode))
 					continue;
 
@@ -410,7 +410,7 @@ public class MultipleGraphHornRule<T> extends HornRule{
 						continue;
 
 					//TO DO: different check
-					if(currentVariable.equals(variable)&&!(oneNeighbour.getNodeEnd().equals(oneNeighbour.getNodeSource())))
+					if(currentVariable.equals(variable)&&!(oneNeighbour.getNodeBottom().equals(oneNeighbour.getNodeSource())))
 						continue;
 
 					Set<Pair<T,T>> newNodeCoveredExamples = rule2coveredExamples.get(newRule);

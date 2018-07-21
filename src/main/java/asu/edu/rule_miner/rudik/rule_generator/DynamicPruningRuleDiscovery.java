@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import asu.edu.rule_miner.rudik.RuleMinerException;
+import asu.edu.rule_miner.rudik.api.model.HornRuleInstantiation;
 import asu.edu.rule_miner.rudik.configuration.Constant;
 import asu.edu.rule_miner.rudik.model.horn_rule.HornRule;
 import asu.edu.rule_miner.rudik.model.horn_rule.MultipleGraphHornRule;
@@ -119,12 +120,46 @@ public class DynamicPruningRuleDiscovery extends HornRuleDiscovery {
   }
 
   @Override
-  public List<List<Pair<String, String>>> instantiateRule(final Set<String> targetPredicates, final HornRule rule,
-      final String subjType, final String objType, boolean positive) {
+  public List<HornRuleInstantiation> instantiateRule(final Set<String> targetPredicates, final HornRule rule,
+      final String subjType, final String objType, boolean positive, int maxInstantiationNumber) {
     if (rule == null) {
       return null;
     }
-    return this.getSparqlExecutor().instantiateHornRule(targetPredicates, rule.getRules(), subjType, objType, positive);
+    final List<List<Pair<String, String>>> allBoundedVariables = this.getSparqlExecutor()
+        .instantiateHornRule(targetPredicates, rule.getRules(), subjType, objType, positive, maxInstantiationNumber);
+    final List<HornRuleInstantiation> allInstantiation = Lists.newArrayList();
+    allBoundedVariables.forEach(bind -> allInstantiation.add(getOneRuleInstantiation(bind, rule)));
+    return allInstantiation;
+  }
+
+  private HornRuleInstantiation getOneRuleInstantiation(final List<Pair<String, String>> createRuleInstantiation,
+      HornRule rule) {
+    final HornRuleInstantiation oneInst = new HornRuleInstantiation();
+    rule.getRules().forEach(atom -> {
+      final String subVariable = atom.getSubject();
+      final String subjInstantiation = getVariableInstantiation(createRuleInstantiation, subVariable);
+      setRuleSubjectObject(subVariable, subjInstantiation, oneInst);
+      final String objVariable = atom.getObject();
+      final String objInstantiation = getVariableInstantiation(createRuleInstantiation, objVariable);
+      setRuleSubjectObject(objVariable, objInstantiation, oneInst);
+      final RuleAtom instAtom = new RuleAtom(subjInstantiation, atom.getRelation(), objInstantiation);
+      oneInst.addInstantiatedAtom(instAtom);
+    });
+    return oneInst;
+  }
+
+  private void setRuleSubjectObject(String variable, String instantiation, HornRuleInstantiation ruleInstantiation) {
+    if (variable.equals(HornRule.START_NODE)) {
+      ruleInstantiation.setRuleSubject(instantiation);
+    }
+    if (variable.equals(HornRule.END_NODE)) {
+      ruleInstantiation.setRuleObject(instantiation);
+    }
+  }
+
+  private String getVariableInstantiation(List<Pair<String, String>> variablesBinding, String variable) {
+    // this should not never throw an exception as it should always find the variable binding
+    return variablesBinding.stream().filter(b -> b.getLeft().equals(variable)).findFirst().get().getRight();
   }
 
   @SuppressWarnings("unchecked")

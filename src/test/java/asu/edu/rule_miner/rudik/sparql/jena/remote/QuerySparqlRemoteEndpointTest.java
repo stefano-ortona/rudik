@@ -68,7 +68,7 @@ public class QuerySparqlRemoteEndpointTest {
 				actualObjectRel++;
 			else
 				actualSubjectRel++;
-			totalNodes.add(edge.getNodeEnd());
+			totalNodes.add(edge.getNodeBottom());
 		}
 		Assert.assertEquals(subjectRel, actualSubjectRel);
 		Assert.assertEquals(objectRel, actualObjectRel);
@@ -78,7 +78,7 @@ public class QuerySparqlRemoteEndpointTest {
 		for(String node:totalNodes){
 			Set<String> neighboursNodes = Sets.newHashSet();
 			for(Edge<String> edge:this.inputGraph.getNeighbours(node))
-				neighboursNodes.add(edge.getNodeEnd());
+				neighboursNodes.add(edge.getNodeBottom());
 			Assert.assertEquals(1, neighboursNodes.size());
 			Assert.assertEquals(entity, neighboursNodes.iterator().next());
 		}			
@@ -108,7 +108,7 @@ public class QuerySparqlRemoteEndpointTest {
 		String firstEntityLiteral = null;
 		for(Edge<String> edge:this.inputGraph.getNeighbours(firstEntityNode)){
 			if(edge.getLabel().equals(firstRelation)){
-				firstEntityLiteral = edge.getNodeEnd();
+				firstEntityLiteral = edge.getNodeBottom();
 				break;
 			}
 		}
@@ -121,7 +121,7 @@ public class QuerySparqlRemoteEndpointTest {
 		String secondEntityLiteral = null;
 		for(Edge<String> edge:this.inputGraph.getNeighbours(secondEntityNode)){
 			if(edge.getLabel().equals(secondRelation)){
-				secondEntityLiteral = edge.getNodeEnd();
+				secondEntityLiteral = edge.getNodeBottom();
 				break;
 			}
 		}

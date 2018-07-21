@@ -114,7 +114,7 @@ public class Graph<T> {
    */
   public boolean addEdge(Edge<T> edge, boolean bidirectional) {
     // cannot add an edge if neither node source nor source edge are in the graph
-    if (!this.neighbours.containsKey(edge.getNodeSource()) || !this.neighbours.containsKey(edge.getNodeEnd())) {
+    if (!this.neighbours.containsKey(edge.getNodeSource()) || !this.neighbours.containsKey(edge.getNodeBottom())) {
       return false;
     }
 
@@ -127,7 +127,7 @@ public class Graph<T> {
     }
 
     if (bidirectional) {
-      final T end = edge.getNodeEnd();
+      final T end = edge.getNodeBottom();
       final Edge<T> inverseEdge = new Edge<T>(end, source, edge.getLabel());
       inverseEdge.setIsArtificial(true);
       neighbours = this.neighbours.get(end);
@@ -190,7 +190,7 @@ public class Graph<T> {
       // if it is not a literal analyse all its neighbours
       final Set<Edge<T>> neighbours = this.getNeighbours(currentNode);
       for (final Edge<T> oneNeighbour : neighbours) {
-        final T endNode = oneNeighbour.getNodeEnd();
+        final T endNode = oneNeighbour.getNodeBottom();
         if (this.isLiteral(endNode)) {
           literalOutputNodes.add(endNode);
           continue;
@@ -229,7 +229,7 @@ public class Graph<T> {
           analysedNodes.add(nodeToAnalyse);
           final Set<Edge<T>> oneHopEdges = this.getNeighbours(nodeToAnalyse);
           for (final Edge<T> currentOneHopEdge : oneHopEdges) {
-            final T endingNode = currentOneHopEdge.getNodeEnd();
+            final T endingNode = currentOneHopEdge.getNodeBottom();
             if (this.isLiteral(endingNode)) {
               outputLiterals.add(endingNode);
               continue;
@@ -309,7 +309,7 @@ public class Graph<T> {
             if (currentOneHopEdge.getLabel().equals(Constant.DIFF_REL)) {
               continue;
             }
-            final T endingNode = currentOneHopEdge.getNodeEnd();
+            final T endingNode = currentOneHopEdge.getNodeBottom();
             // avoid literals
             if (this.isLiteral(endingNode)) {
               continue;

@@ -41,6 +41,7 @@ public class DBPediaClient extends ClientTest {
     final Set<String> relations = Sets.newHashSet("http://dbpedia.org/ontology/spouse");
     final String typeSubject = "http://dbpedia.org/ontology/Person";
     final String typeObject = "http://dbpedia.org/ontology/Person";
+    StatisticsContainer.setFileName(new File("local_log"));
     Assert.assertNotNull(super.executeRudikNegativeRules(relations, typeSubject, typeObject, null, null));
   }
 

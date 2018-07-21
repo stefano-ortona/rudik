@@ -342,12 +342,12 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public List<List<Pair<String, String>>> instantiateHornRule(Set<String> targetPredicates, Set<RuleAtom> rules,
-      final String subjType, final String objType, boolean positive) {
+      final String subjType, final String objType, boolean positive, int maxInstantiationNumber) {
     if (rules.size() == 0) {
       return Lists.newArrayList();
     }
     final String hornRuleQuery = super.generateHornRuleQueryInstantiation(targetPredicates, rules, subjType, objType,
-        true, positive);
+        true, positive, maxInstantiationNumber);
     return executeStarQuery(hornRuleQuery);
   }
 
