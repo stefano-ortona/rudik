@@ -167,7 +167,7 @@ public class DynamicScoreComputation {
 
       if (plausibleRule.isValid()) {
         if (!this.rule2validationCoverage.containsKey(plausibleRule.getRules())) {
-          final int positiveCoverage = this.getRuleMatchingValidationExamples(plausibleRule.getRules());
+          final int positiveCoverage = this.getRuleMatchingValidationExamples(plausibleRule);
 
           this.rule2validationCoverage.put(plausibleRule.getRules(), positiveCoverage);
           if (plausibleRule.isExpandible(maxAtomLen)) {
@@ -294,24 +294,30 @@ public class DynamicScoreComputation {
    * @param rules
    * @return
    */
-  public int getRuleMatchingValidationExamples(final Set<RuleAtom> rules) {
+  public int getRuleMatchingValidationExamples(final MultipleGraphHornRule<String> rule) {
     StatisticsContainer.increaseValidationQuery();
 
     final long startingTime = System.currentTimeMillis();
     int coverage = -1;
+    Set<Pair<String, String>> matchedExamples = null;
     try {
       if (minePositive) {
-        coverage = this.executor.getMatchingNegativeExamples(rules, relations, typeSubject, typeObject,
-            validationExamples, subjectFunction, objectFunction).size();
+        matchedExamples = this.executor.getMatchingNegativeExamples(rule.getRules(), relations, typeSubject, typeObject,
+            validationExamples, subjectFunction, objectFunction);
+        coverage = matchedExamples.size();
       } else {
-        coverage = this.executor
-            .getMatchingPositiveExamples(rules, relations, typeSubject, typeObject, validationExamples).size();
+        matchedExamples = this.executor.getMatchingPositiveExamples(rule.getRules(), relations, typeSubject, typeObject,
+            validationExamples);
+        coverage = matchedExamples.size();
       }
       if (coverage == -1) {
         coverage = Integer.MAX_VALUE;
       }
     } catch (final Exception e) {
       coverage = Integer.MAX_VALUE;
+    }
+    if (matchedExamples != null) {
+      rule.setValidationCoveredExamples(matchedExamples);
     }
     final long endingTime = System.currentTimeMillis();
     StatisticsContainer.increaseTimeValidationQuery(endingTime - startingTime);

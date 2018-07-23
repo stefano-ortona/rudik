@@ -3,6 +3,7 @@ package asu.edu.rule_miner.rudik.model.horn_rule;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -305,6 +306,14 @@ public class HornRule {
     final HornRule rule = new HornRule();
     allAtoms.forEach(a -> rule.addRuleAtom(a));
     return rule;
+  }
+
+  public Set<Pair<String, String>> getCoveredExamples() {
+    return null;
+  }
+
+  public Set<Pair<String, String>> getValidationCoveredExamples() {
+    return null;
   }
 
 }

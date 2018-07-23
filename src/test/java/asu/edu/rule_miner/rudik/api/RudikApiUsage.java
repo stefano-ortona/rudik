@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -90,6 +91,21 @@ public class RudikApiUsage {
       }
       // get the ontology type of an entity. This could be something like Person, President, Politician
       final Set<String> types = sorroundingGraph.getTypes("Barack_Obama");
+
+      // 4) get covered examples of the rule (NOTE: this will be null in case of instantiateRule API)
+      // get the generation set examples covered
+      final Set<Pair<String, String>> genExamples = oneResult.getGenerationExamples();
+      for (final Pair<String, String> oneExample : genExamples) {
+        // get one example - things like <Barack_Obama,Michelle_Obama>
+        final String subject = oneExample.getLeft();
+        final String object = oneExample.getRight();
+      }
+      // get the validation set examples covered - these could be potential errors
+      final Set<Pair<String, String>> valExamples = oneResult.getValidationExamples();
+      for (final Pair<String, String> oneExample : valExamples) {
+        final String subject = oneExample.getLeft();
+        final String object = oneExample.getRight();
+      }
     }
   }
 

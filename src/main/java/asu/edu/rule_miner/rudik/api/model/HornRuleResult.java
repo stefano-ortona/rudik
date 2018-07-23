@@ -1,6 +1,9 @@
 package asu.edu.rule_miner.rudik.api.model;
 
 import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import asu.edu.rule_miner.rudik.model.horn_rule.HornRule;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Graph;
@@ -63,6 +66,14 @@ public class HornRuleResult {
 
   public void setSorroundingGraph(Graph<String> sorroundingGraph) {
     this.sorroundingGraph = sorroundingGraph;
+  }
+
+  public Set<Pair<String, String>> getGenerationExamples() {
+    return this.outputRule.getCoveredExamples();
+  }
+
+  public Set<Pair<String, String>> getValidationExamples() {
+    return this.outputRule.getValidationCoveredExamples();
   }
 
 }
