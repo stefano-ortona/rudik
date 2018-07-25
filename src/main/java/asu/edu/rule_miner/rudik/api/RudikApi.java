@@ -77,7 +77,7 @@ public class RudikApi {
   private RudikResult discoverRules(final String targetPredicate, RuleType type) {
     final Pair<String, String> subjectObjectType = kbAnalysis.getPredicateTypes(targetPredicate);
     final String typeSubject = subjectObjectType.getLeft();
-    final String typeObject = subjectObjectType.getLeft();
+    final String typeObject = subjectObjectType.getRight();
     final Set<String> relations = Sets.newHashSet(targetPredicate);
     final Set<Pair<String, String>> positiveExamples = ruleDiscovery.generatePositiveExamples(relations, typeSubject,
         typeObject);

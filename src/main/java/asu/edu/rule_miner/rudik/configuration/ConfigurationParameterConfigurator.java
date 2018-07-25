@@ -127,4 +127,14 @@ public class ConfigurationParameterConfigurator {
 
   }
 
+  public static void setPositiveExamplesLimit(int limit) {
+    final Configuration config = ConfigurationFacility.getConfiguration();
+    config.setProperty(StringUtils.join(Constant.CONF_SPARQL_ENGINE, ".", Constant.CONF_POS_EXAMPLES_LIMIT), limit);
+  }
+
+  public static void setNegativeExamplesLimit(int limit) {
+    final Configuration config = ConfigurationFacility.getConfiguration();
+    config.setProperty(StringUtils.join(Constant.CONF_SPARQL_ENGINE, ".", Constant.CONF_NEG_EXAMPLES_LIMIT), limit);
+  }
+
 }

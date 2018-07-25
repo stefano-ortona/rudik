@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -12,6 +13,8 @@ import asu.edu.rule_miner.rudik.api.model.HornRuleInstantiation;
 import asu.edu.rule_miner.rudik.api.model.HornRuleResult;
 import asu.edu.rule_miner.rudik.api.model.HornRuleResult.RuleType;
 import asu.edu.rule_miner.rudik.api.model.RudikResult;
+import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
+import asu.edu.rule_miner.rudik.configuration.ConfigurationParameterConfigurator;
 import asu.edu.rule_miner.rudik.model.horn_rule.HornRule;
 import asu.edu.rule_miner.rudik.model.horn_rule.RuleAtom;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Edge;
@@ -30,6 +33,27 @@ public class RudikApiUsage {
     API = new RudikApi("src/main/config/DbpediaConfiguration.xml", 5 * 60); // timeout set to 5 minutes
     // set the max number of instantiated facts to generate when executing rules against the KB
     API.setMaxInstantiationNumber(500);
+  }
+
+  @Before
+  public void initialiseParameters() {
+    // set some of the parameters through the ConfigurationParameterConfigurator
+    // NOTE: after you set the parameters, the parameters will keep the new set values
+    ConfigurationParameterConfigurator.setAlphaParameter(0.3);
+    ConfigurationParameterConfigurator.setBetaParameter(0.7);
+    ConfigurationParameterConfigurator.setMaxRuleLength(2);
+
+    // set maximum number of positive/negative examples - randomly selected
+    ConfigurationParameterConfigurator.setPositiveExamplesLimit(15);
+    ConfigurationParameterConfigurator.setNegativeExamplesLimit(15);
+
+    // specify number max number of incoming and outgoing edges
+    ConfigurationParameterConfigurator.setIncomingEdgesLimit(1000);
+    ConfigurationParameterConfigurator.setOutgoingEdgesLimit(1000);
+
+    // check new values have been set
+    Assert.assertEquals(15, ConfigurationFacility.getConfiguration().getInt("naive.sparql.limits.examples.positive"));
+    Assert.assertEquals(15, ConfigurationFacility.getConfiguration().getInt("naive.sparql.limits.examples.negative"));
   }
 
   @Test
