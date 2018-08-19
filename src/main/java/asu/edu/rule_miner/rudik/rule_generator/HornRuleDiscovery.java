@@ -86,6 +86,15 @@ public abstract class HornRuleDiscovery implements HornRuleDiscoveryInterface {
   public abstract Map<HornRule, Double> discoverNegativeHornRules(Set<Pair<String, String>> negativeExamples,
       Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject);
 
+  @Override
+  public void setMaxRuleLength(int length) {
+    if (length <= 0) {
+      LOGGER.error("Cannot set a rule length less or equal than 0, skipping.");
+    } else {
+      this.maxRuleLen = length;
+    }
+  }
+
   /**
    * Utlity method to expand graphs for an input set of nodes to analyse
    * @param toAnalyse

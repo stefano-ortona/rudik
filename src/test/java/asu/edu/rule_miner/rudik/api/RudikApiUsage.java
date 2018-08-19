@@ -35,6 +35,9 @@ public class RudikApiUsage {
     API = new RudikApi("src/main/config/DbpediaConfiguration.xml", 5 * 60); // timeout set to 5 minutes
     // set the max number of instantiated facts to generate when executing rules against the KB
     API.setMaxInstantiationNumber(500);
+
+    // set maximum rules length
+    API.setMaxRuleLength(3);
   }
 
   @Before
@@ -43,7 +46,6 @@ public class RudikApiUsage {
     // NOTE: after you set the parameters, the parameters will keep the new set values
     ConfigurationParameterConfigurator.setAlphaParameter(0.3);
     ConfigurationParameterConfigurator.setBetaParameter(0.7);
-    ConfigurationParameterConfigurator.setMaxRuleLength(2);
 
     // set maximum number of positive/negative examples - randomly selected
     ConfigurationParameterConfigurator.setPositiveExamplesLimit(15);
@@ -213,6 +215,22 @@ public class RudikApiUsage {
     final String mostGenericType = config.getString(Constant.CONF_GENERIC_TYPES);
     Assert.assertEquals("http://dbpedia.org/ontology/", relationPrefix);
     Assert.assertEquals("http://dbpedia.org/ontology/Agent", mostGenericType);
+  }
+
+  @Test
+  public void testComputeRulesYago() {
+    // like this we can compute positive rules giving a target predicate - target predicate must contain the full name
+    final String targetPredicate = "http://yago-knowledge.org/resource/hasChild";
+    // use discoverNegativeRules to discover negative rules
+    final RudikApi api = new RudikApi("src/main/config/YagoConfiguration.xml", 5 * 60);
+    api.setMaxRuleLength(2);
+    api.setMaxInstantiationNumber(500);
+    // set maximum number of positive/negative examples - randomly selected
+    ConfigurationParameterConfigurator.setPositiveExamplesLimit(15);
+    ConfigurationParameterConfigurator.setNegativeExamplesLimit(15);
+
+    final RudikResult result = api.discoverPositiveRules(targetPredicate);
+    Assert.assertFalse(result.getResults().isEmpty());
   }
 
 }

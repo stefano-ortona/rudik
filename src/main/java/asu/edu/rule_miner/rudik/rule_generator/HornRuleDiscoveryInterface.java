@@ -151,4 +151,6 @@ public interface HornRuleDiscoveryInterface {
   List<HornRuleInstantiation> instantiateRule(Set<String> targetPredicates, HornRule rule, String subjType,
       String objType, boolean positive, int maxInstantiationNumber);
 
+  public void setMaxRuleLength(int length);
+
 }

@@ -142,4 +142,8 @@ public class RudikApi {
     this.maxInstantiationNumber = number;
   }
 
+  public void setMaxRuleLength(int length) {
+    this.ruleDiscovery.setMaxRuleLength(length);
+  }
+
 }
