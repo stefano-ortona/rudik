@@ -419,8 +419,12 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
       final QuerySolution oneResult = results.next();
       final Iterator<String> variables = oneResult.varNames();
       while (variables.hasNext()) {
-        final String oneVar = variables.next();
+        String oneVar = variables.next();
         final String value = oneResult.get(oneVar).toString();
+        // if it is a constant, add binding constant to constant
+        if (oneVar.startsWith(CONSTANT_SUBSTITUTION_VARIABLE)) {
+          oneVar = value;
+        }
         currentBinding.add(Pair.of(oneVar, value));
       }
       allBindings.add(currentBinding);

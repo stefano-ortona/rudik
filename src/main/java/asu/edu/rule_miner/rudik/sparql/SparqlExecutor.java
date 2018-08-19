@@ -16,6 +16,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.jena.ext.com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,8 @@ public abstract class SparqlExecutor {
 
   // max runtime for a sparql query in milliseconds, make it configurable
   protected long MAX_QUERY_RUN_TIME = 20000;
+
+  protected final static String CONSTANT_SUBSTITUTION_VARIABLE = "constantVariable_";
 
   @SuppressWarnings("unchecked")
   public SparqlExecutor(final Configuration config) {
@@ -273,25 +276,86 @@ public abstract class SparqlExecutor {
   public String getHornRuleAtomQuery(final Set<RuleAtom> rules) {
     final StringBuilder atomFilterBuilder = new StringBuilder();
     RuleAtom inequalityAtom = null;
+    final Map<String, String> constant2variable = Maps.newHashMap();
     for (final RuleAtom atom : rules) {
+      final String subject = getVariableSubstitution(atom.getSubject(), constant2variable, rules);
+      final String object = getVariableSubstitution(atom.getObject(), constant2variable, rules);
       if (atom.getRelation().equals(Constant.GREATER_EQUAL_REL) || atom.getRelation().equals(Constant.LESS_EQUAL_REL)
           || atom.getRelation().equals(Constant.GREATER_REL) || atom.getRelation().equals(Constant.LESS_REL)
           || atom.getRelation().equals(Constant.EQUAL_REL)) {
-        atomFilterBuilder.append("FILTER (?" + atom.getSubject() + atom.getRelation() + "?" + atom.getObject() + ") ");
+        atomFilterBuilder.append("FILTER (?" + subject + atom.getRelation() + "?" + object + ") ");
         continue;
       }
       if (atom.getRelation().equals("!=")) {
         inequalityAtom = atom;
         continue;
       }
-      atomFilterBuilder.append("?" + atom.getSubject() + " <" + atom.getRelation() + "> ?" + atom.getObject() + ". ");
+      atomFilterBuilder.append("?" + subject + " <" + atom.getRelation() + "> ?" + object + ". ");
     }
     atomFilterBuilder.toString();
     if (inequalityAtom != null) {
-      atomFilterBuilder.append(this.inequalityFilter(rules, inequalityAtom));
+      atomFilterBuilder.append(this.inequalityFilter(rules, inequalityAtom)).append(" ");
     }
+    // for each constant variable, impose the equality to constants
+    constant2variable.forEach((k, v) -> {
+      atomFilterBuilder.append("FILTER(?").append(v).append("=<").append(k).append(">) ");
+    });
     return atomFilterBuilder.toString();
+  }
 
+  private String getVariableSubstitution(String constant, Map<String, String> constant2variable, Set<RuleAtom> atoms) {
+    if (constant2variable.containsKey(constant)) {
+      return constant2variable.get(constant);
+    }
+    // check it it a constant
+    if (constant.startsWith("http")) {
+      // do variable substitution
+      String createdVariable = null;
+      // if subject or object are missing, that is the variable. Cannot be both
+      if (isSubjectMissing(atoms)) {
+        createdVariable = HornRule.START_NODE;
+      }
+      if (isObjectMissing(atoms)) {
+        if (createdVariable != null) {
+          throw new RuleMinerException("Rule atoms contains neither " + HornRule.START_NODE + " nor "
+              + HornRule.END_NODE + " variables, cannot instantiate rule.", LOGGER);
+        }
+        createdVariable = HornRule.END_NODE;
+      }
+      if (createdVariable == null) {
+        // need to create a loose variable
+        if (constant2variable.containsValue(HornRule.START_NODE)
+            || constant2variable.containsValue(HornRule.END_NODE)) {
+          // cannot instantiate rule if subject (object) is missing and there is another constant
+          throw new RuleMinerException("Rule atoms do not contain either " + HornRule.START_NODE + " or "
+              + HornRule.END_NODE + " variables, and there is another constant in the rule. Cannot instantiate rule.",
+              LOGGER);
+        }
+        createdVariable = CONSTANT_SUBSTITUTION_VARIABLE + constant2variable.size();
+      }
+      constant2variable.put(constant, createdVariable);
+      return createdVariable;
+    } else {
+      // return the variable and do nothing
+      return constant;
+    }
+  }
+
+  private boolean isSubjectMissing(Set<RuleAtom> atoms) {
+    return isVariableMissing(atoms, HornRule.START_NODE);
+  }
+
+  private boolean isObjectMissing(Set<RuleAtom> atoms) {
+    return isVariableMissing(atoms, HornRule.END_NODE);
+  }
+
+  private boolean isVariableMissing(Set<RuleAtom> atoms, final String variableTarget) {
+    for (final RuleAtom oneAtom : atoms) {
+      if (oneAtom.getSubject().equals(variableTarget) || oneAtom.getObject().equals(variableTarget)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private String inequalityFilter(final Set<RuleAtom> rules, final RuleAtom inequalityAtom) {

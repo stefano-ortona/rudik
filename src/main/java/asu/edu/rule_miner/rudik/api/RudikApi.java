@@ -106,7 +106,7 @@ public class RudikApi {
   public RudikResult instantiateSingleRule(HornRule rule, String targetPredicate, RuleType type) {
     final Pair<String, String> subjectObjectType = kbAnalysis.getPredicateTypes(targetPredicate);
     final String typeSubject = subjectObjectType.getLeft();
-    final String typeObject = subjectObjectType.getLeft();
+    final String typeObject = subjectObjectType.getRight();
     return buildResult(Lists.newArrayList(rule), targetPredicate, type, typeSubject, typeObject);
   }
 

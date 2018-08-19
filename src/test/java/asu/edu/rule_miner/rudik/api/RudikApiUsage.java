@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,6 +16,7 @@ import asu.edu.rule_miner.rudik.api.model.HornRuleResult.RuleType;
 import asu.edu.rule_miner.rudik.api.model.RudikResult;
 import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
 import asu.edu.rule_miner.rudik.configuration.ConfigurationParameterConfigurator;
+import asu.edu.rule_miner.rudik.configuration.Constant;
 import asu.edu.rule_miner.rudik.model.horn_rule.HornRule;
 import asu.edu.rule_miner.rudik.model.horn_rule.RuleAtom;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Edge;
@@ -152,6 +154,42 @@ public class RudikApiUsage {
   }
 
   @Test
+  public void instantiateRuleWithConstants() {
+    // this reads a rule in the form of string, converts it to a HornRule, and instantiate over the KB
+    // the rule in the form of string
+    final String ruleString = "http://dbpedia.org/ontology/spouse(http://dbpedia.org/resource/Barbara_Henrickson,subject) & http://dbpedia.org/ontology/child(http://dbpedia.org/resource/Barbara_Henrickson,object)";
+    // the target predicate
+    final String targetPredicate = "http://dbpedia.org/ontology/spouse";
+    // the rule type
+    final RuleType type = RuleType.negative;
+    // parse and create the HornRule
+    final HornRule rule = HornRule.createHornRule(ruleString);
+    // instantiate rule and create the result
+    final RudikResult result = API.instantiateSingleRule(rule, targetPredicate, type);
+    Assert.assertNotNull(result);
+    // see testComputeRules on how to inspect and use the result
+    final Graph<String> sorGraph = result.getResults().get(0).getSorroundingGraph();
+  }
+
+  @Test
+  public void instantiateNegativeRule() {
+    // this reads a rule in the form of string, converts it to a HornRule, and instantiate over the KB
+    // the rule in the form of string
+    final String ruleString = "http://dbpedia.org/ontology/foundingYear(subject,v0) & http://dbpedia.org/ontology/birthDate(object,v1) & >(v1,v0)";
+    // the target predicate
+    final String targetPredicate = "http://dbpedia.org/ontology/foundedBy";
+    // the rule type
+    final RuleType type = RuleType.negative;
+    // parse and create the HornRule
+    final HornRule rule = HornRule.createHornRule(ruleString);
+    // instantiate rule and create the result
+    final RudikResult result = API.instantiateSingleRule(rule, targetPredicate, type);
+    Assert.assertNotNull(result);
+    // see testComputeRules on how to inspect and use the result
+    final Graph<String> sorGraph = result.getResults().get(0).getSorroundingGraph();
+  }
+
+  @Test
   public void getAllKBRelations() {
     // get all relations from DBpedia KB
     Collection<String> allRelations = API.getAllKBRelations();
@@ -166,6 +204,15 @@ public class RudikApiUsage {
     for (final String oneRel : allRelations) {
       System.out.println("Found a relation from the KB: " + oneRel);
     }
+  }
+
+  @Test
+  public void getOntologyPrefixAndGenericType() {
+    final Configuration config = ConfigurationFacility.getConfiguration().subset(Constant.CONF_SPARQL_ENGINE);
+    final String relationPrefix = config.getString(Constant.CONF_RELATION_TARGET_REFIX);
+    final String mostGenericType = config.getString(Constant.CONF_GENERIC_TYPES);
+    Assert.assertEquals("http://dbpedia.org/ontology/", relationPrefix);
+    Assert.assertEquals("http://dbpedia.org/ontology/Agent", mostGenericType);
   }
 
 }
