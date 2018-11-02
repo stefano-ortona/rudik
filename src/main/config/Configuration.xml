@@ -4,21 +4,23 @@
 	<naive>
 	    <!-- specify here runtime parameters of the rule generation algorithms -->
 		<runtime>
+			
 			<num_threads>1</num_threads>
 			<!-- max number of atoms in the output rule -->
-			<max_rule_lenght>3</max_rule_lenght>
+			<max_rule_lenght>2</max_rule_lenght>
 			<!-- if a rule covers more than validation_threshold*(validation set size) validation examples, then it is discared.
 			Default 0.2 -->
-			<score>
+		         <score>	
 				<validation_threshold>0.2</validation_threshold>
 				<!-- set weights for the score computation. Default 0.3, 0.6, 0.1 -->
 				<alpha>0.3</alpha>
-				<beta>0.6</beta>
+				<beta>0.7</beta>
 				<gamma>0.1</gamma>
 			</score>
 		</runtime>
 		<!-- sparql engine endpoint specific parameters -->
 		<sparql>
+
 <!-- 			<class>asu.edu.neg_rule_miner.sparql.rdf3x.QueryRDF3XStore</class> -->
 <!-- 			<parameters> -->
 <!-- 				<db_location>/home/stefano/Downloads/Dataset/RDF3x_dataset/DBPedia/dbpedia</db_location> -->
@@ -26,7 +28,7 @@
 <!-- 			</parameters> -->
 			<class>asu.edu.rule_miner.rudik.sparql.jena.remote.QuerySparqlRemoteEndpoint</class>
 			<parameters>
-				<sparql_endpoint>http://localhost:8890/sparql</sparql_endpoint>
+				<sparql_endpoint>http://dbpedia.org/sparql</sparql_endpoint>
 			</parameters>
 <!-- 			<class>asu.edu.neg_rule_miner.sparql.jena.tbd.QueryJenaRDFAPI</class> -->
 <!-- 			<parameters> -->
@@ -35,7 +37,7 @@
 <!-- 			<class>asu.edu.neg_rule_miner.sparql.relational.QueryRelationalDatabase</class> -->
 <!-- 			<parameters> -->
 <!-- 				<sparql_back_up> -->
-<!-- 					<class>asu.edu.neg_rule_miner.sparql.jena.remote.QuerySparqlRemoteEndpoint</class> --> -->
+<!-- 					<class>asu.edu.neg_rule_miner.sparql.jena.remote.QuerySparqlRemoteEndpoint</class> --> 
 <!-- 					<parameters> -->
 <!-- 						<sparql_endpoint>http://localhost:8890/sparql</sparql_endpoint> -->
 <!-- 					</parameters> -->

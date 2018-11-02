@@ -33,6 +33,7 @@ public class DynamicPruningRuleDiscovery extends HornRuleDiscovery {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(DynamicPruningRuleDiscovery.class.getName());
 
+
   public DynamicPruningRuleDiscovery() {
     super();
   }
@@ -391,8 +392,7 @@ public class DynamicPruningRuleDiscovery extends HornRuleDiscovery {
       final VariancePopularSampling sampling = new VariancePopularSampling(alphaSmart, betaSmart, gammaSmart,
           subWeightSmart, objWeightSmart, this.getSparqlExecutor().getSubjectLimit(),
           this.getSparqlExecutor().getObjectLimit(), isTopK);
-      final Set<Pair<String, String>> sampledExamples = sampling.sampleExamples(generationExamples,
-          generationNodesGraph, generationSmartLimit);
+      final Set<Pair<String, String>> sampledExamples = sampling.sampleExamples(generationExamples, generationSmartLimit);
       generationExamples.clear();
       generationExamples.addAll(sampledExamples);
       StatisticsContainer.setGenerationSample(generationExamples);

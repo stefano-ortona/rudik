@@ -40,7 +40,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public void executeQuery(final String entity, final Graph<String> graph,
-      final Map<String, Set<String>> entity2types) {
+                           final Map<String, Set<String>> entity2types) {
     // different query if the entity is a literal
     if (graph.isLiteral(entity)) {
       // this.compareLiterals(entity, graph);
@@ -77,7 +77,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
     final String sub = "sub", rel = "rel", obj = "obj";
 
     final ArrayList<QuerySolution> resultTriples = tripFil.doFilter(results, sub, rel, obj, entity, this.subjectLimit,
-        this.objectLimit);
+            this.objectLimit);
 
     final Set<String> currentTypes = Sets.newHashSet();
     entity2types.put(entity, currentTypes);
@@ -157,9 +157,9 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public Set<Pair<String, String>> generateUnionNegativeExamples(final Set<String> relations, final String typeSubject,
-      final String typeObject, final boolean subjectFunction, final boolean objectFunction) {
+                                                                 final String typeObject, final boolean subjectFunction, final boolean objectFunction) {
     String negativeCandidateQuery = super.generateNegativeExampleUnionQuery(relations, typeSubject, typeObject,
-        subjectFunction, objectFunction, true);
+            subjectFunction, objectFunction, true);
     final Set<Pair<String, String>> negativeExamples = Sets.newHashSet();
     if (negativeCandidateQuery == null) {
       return negativeExamples;
@@ -212,7 +212,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public Set<Pair<String, String>> generatePositiveExamples(final Set<String> relations, final String typeSubject,
-      final String typeObject) {
+                                                            final String typeObject) {
     final String positiveCandidateQuery = super.generatePositiveExampleQuery(relations, typeSubject, typeObject, true);
     final Set<Pair<String, String>> positiveExamples = Sets.newHashSet();
     if (positiveCandidateQuery == null) {
@@ -247,7 +247,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public Set<Pair<String, String>> getKBExamples(final String query, final String subject, final String object,
-      final boolean includeInverted) {
+                                                 final boolean includeInverted) {
 
     LOGGER.debug("Executing negative candidate query selection '{}' on Sparql Endpoint...", query);
     final long startTime = System.currentTimeMillis();
@@ -289,26 +289,26 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public int getSupportivePositiveExamples(final Set<RuleAtom> rules, final Set<String> relations,
-      final String typeSubject, final String typeObject, final Set<Pair<String, String>> positiveExamples) {
+                                           final String typeSubject, final String typeObject, final Set<Pair<String, String>> positiveExamples) {
 
     if (rules.size() == 0) {
       return 0;
     }
     final String positiveExamplesCountQuery = super.generateRulesPositiveExampleQuery(rules, relations, typeSubject,
-        typeObject);
+            typeObject);
 
     return executeSubjectObjectQuery(positiveExamplesCountQuery, positiveExamples).size();
   }
 
   @Override
   public Set<Pair<String, String>> getMatchingPositiveExamples(final Set<RuleAtom> rules, final Set<String> relations,
-      final String typeSubject, final String typeObject, final Set<Pair<String, String>> positiveExamples) {
+                                                               final String typeSubject, final String typeObject, final Set<Pair<String, String>> positiveExamples) {
 
     if (rules.size() == 0) {
       return Sets.newHashSet();
     }
     final String positiveExamplesCountQuery = super.generateRulesPositiveExampleQuery(rules, relations, typeSubject,
-        typeObject);
+            typeObject);
 
     return executeSubjectObjectQuery(positiveExamplesCountQuery, positiveExamples);
 
@@ -316,14 +316,14 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public Set<Pair<String, String>> getMatchingNegativeExamples(final Set<RuleAtom> rules, final Set<String> relations,
-      final String typeSubject, final String typeObject, final Set<Pair<String, String>> negativeExamples,
-      final boolean subjectFuntion, final boolean objectFunction) {
+                                                               final String typeSubject, final String typeObject, final Set<Pair<String, String>> negativeExamples,
+                                                               final boolean subjectFuntion, final boolean objectFunction) {
 
     if (rules.size() == 0) {
       return Sets.newHashSet();
     }
     final String negativeExamplesCountQuery = super.generateRulesNegativeExampleQuery(rules, relations, typeSubject,
-        typeObject, subjectFuntion, objectFunction);
+            typeObject, subjectFuntion, objectFunction);
 
     return executeSubjectObjectQuery(negativeExamplesCountQuery, negativeExamples);
 
@@ -331,7 +331,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public Set<Pair<String, String>> executeHornRuleQuery(final Set<RuleAtom> rules, final String typeSubject,
-      final String typeObject) {
+                                                        final String typeObject) {
     if (rules.size() == 0) {
       return Sets.newHashSet();
     }
@@ -342,18 +342,18 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public List<List<Pair<String, String>>> instantiateHornRule(Set<String> targetPredicates, Set<RuleAtom> rules,
-      final String subjType, final String objType, boolean positive, int maxInstantiationNumber) {
+                                                              final String subjType, final String objType, boolean positive, int maxInstantiationNumber) {
     if (rules.size() == 0) {
       return Lists.newArrayList();
     }
     final String hornRuleQuery = super.generateHornRuleQueryInstantiation(targetPredicates, rules, subjType, objType,
-        true, positive, maxInstantiationNumber);
+            true, positive, maxInstantiationNumber);
     return executeStarQuery(hornRuleQuery);
   }
 
   @Override
   public Set<Pair<String, String>> executeRestrictiveHornRuleQuery(final String queryRestriction,
-      final Set<RuleAtom> rules, final String typeSubject, final String typeObject) {
+                                                                   final Set<RuleAtom> rules, final String typeSubject, final String typeObject) {
     if (rules.size() == 0) {
       return Sets.newHashSet();
     }
@@ -365,7 +365,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
   }
 
   private Set<Pair<String, String>> executeSubjectObjectQuery(final String query,
-      final Set<Pair<String, String>> examples) {
+                                                              final Set<Pair<String, String>> examples) {
     final Set<Pair<String, String>> matchingPositiveExamples = Sets.newHashSet();
     if (query == null) {
       return matchingPositiveExamples;
@@ -391,7 +391,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
       final String subject = oneResult.get("subject").toString();
       final String object = oneResult.get("object").toString();
       if ((subject != null) && (object != null)
-          && ((examples == null) || examples.contains(Pair.of(subject, object)))) {
+              && ((examples == null) || examples.contains(Pair.of(subject, object)))) {
         matchingPositiveExamples.add(Pair.of(subject, object));
       }
     }
@@ -448,9 +448,9 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
       final QuerySolution oneResult = results.next();
       final String relation = oneResult.get("rel").toString();
       if ((relation != null) && !relation.isEmpty()
-          && ((targetPrefix == null) || targetPrefix.stream().anyMatch(prefix -> {
-            return relation.startsWith(prefix);
-          }))) {
+              && ((targetPrefix == null) || targetPrefix.stream().anyMatch(prefix -> {
+        return relation.startsWith(prefix);
+      }))) {
         allPredicates.add(relation);
       }
     }
@@ -484,9 +484,9 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
       final QuerySolution oneResult = results.next();
       final String type = oneResult.get(typeName).toString();
       if ((type != null) && !type.isEmpty() && !genericTypes.contains(type)
-          && ((targetPrefix == null) || targetPrefix.stream().anyMatch(prefix -> {
-            return type.startsWith(prefix);
-          }))) {
+              && ((targetPrefix == null) || targetPrefix.stream().anyMatch(prefix -> {
+        return type.startsWith(prefix);
+      }))) {
         return type;
       }
     }
@@ -522,7 +522,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
 
   @Override
   public Map<String, Set<Pair<String, String>>> getRulePositiveSupport(
-      final Set<Pair<String, String>> positiveExamples) {
+          final Set<Pair<String, String>> positiveExamples) {
 
     final Map<String, Set<Pair<String, String>>> predicate2support = Maps.newHashMap();
     final Set<String> totalPermutations = Sets.newHashSet();
@@ -550,7 +550,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
           final Set<String> currentPredicates = entity2predicate.get(currentExample);
           for (final String predicate : currentPredicates) {
             Set<Pair<String, String>> currentPredicateSupport = predicate2support
-                .get(predicate.replaceAll("entity", permutation));
+                    .get(predicate.replaceAll("entity", permutation));
             if (currentPredicateSupport == null) {
               currentPredicateSupport = Sets.newHashSet();
               predicate2support.put(predicate.replaceAll("entity", permutation), currentPredicateSupport);
@@ -564,7 +564,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
             sparqlQuery += " FROM " + this.graphIri;
           }
           sparqlQuery += " WHERE {" + "{<" + currentExample.toString() + "> ?rel ?obj.} " + "UNION " + "{?sub ?rel <"
-              + currentExample.toString() + ">.}}";
+                  + currentExample.toString() + ">.}}";
 
           final long startTime = System.currentTimeMillis();
 

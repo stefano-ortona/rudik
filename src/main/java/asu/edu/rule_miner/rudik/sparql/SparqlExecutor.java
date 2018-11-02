@@ -73,7 +73,7 @@ public abstract class SparqlExecutor {
       try {
         final HierarchicalConfiguration hierarchicalConfig = (HierarchicalConfiguration) config;
         final List<HierarchicalConfiguration> prefixes = hierarchicalConfig
-            .configurationsAt(Constant.CONF_RELATION_PREFIX);
+                .configurationsAt(Constant.CONF_RELATION_PREFIX);
         for (final HierarchicalConfiguration prefix : prefixes) {
           final String name = prefix.getString(Constant.CONF_RELATION_PREFIX_NAME);
           final String uri = prefix.getString(Constant.CONF_RELATION_PREFIX_URI);
@@ -84,7 +84,7 @@ public abstract class SparqlExecutor {
 
       } catch (final Exception e) {
         LOGGER.error("Error while reading " + Constant.CONF_RELATION_PREFIX + " parameter from the configuration file.",
-            e);
+                e);
       }
     }
 
@@ -167,10 +167,10 @@ public abstract class SparqlExecutor {
   public abstract void executeQuery(String entity, Graph<String> inputGraphs, Map<String, Set<String>> entity2types);
 
   public abstract Set<Pair<String, String>> generateUnionNegativeExamples(Set<String> relations, String typeSubject,
-      String typeObject, boolean subjectFunction, boolean objectFunction);
+                                                                          String typeObject, boolean subjectFunction, boolean objectFunction);
 
   public abstract Set<Pair<String, String>> generatePositiveExamples(Set<String> relations, String typeSubject,
-      String typeObject);
+                                                                     String typeObject);
 
   public abstract Set<String> getAllPredicates();
 
@@ -185,10 +185,10 @@ public abstract class SparqlExecutor {
    * @return
    */
   public abstract Set<Pair<String, String>> getKBExamples(String query, String subject, String object,
-      boolean includeInverted);
+                                                          boolean includeInverted);
 
   public String generatePositiveExampleQuery(final Set<String> relations, final String typeSubject,
-      final String typeObject, final boolean includeLimitation) {
+                                             final String typeObject, final boolean includeLimitation) {
 
     if ((relations == null) || (relations.size() == 0)) {
       return null;
@@ -230,7 +230,7 @@ public abstract class SparqlExecutor {
 
     if (includeLimitation) {
       if (this.positiveExampleLimit >= 0) {
-        query.append(" ORDER BY RAND() LIMIT " + this.positiveExampleLimit);
+        query.append(" ORDER BY RAND() LIMIT " + this.positiveExampleLimit*2);
       }
     }
 
@@ -238,7 +238,7 @@ public abstract class SparqlExecutor {
   }
 
   public String generateRulesPositiveExampleQuery(final Set<RuleAtom> rules, final Set<String> relations,
-      final String typeSubject, final String typeObject) {
+                                                  final String typeSubject, final String typeObject) {
 
     if (!(rules.size() > 0)) {
       return null;
@@ -260,14 +260,14 @@ public abstract class SparqlExecutor {
   }
 
   public String generateRulesNegativeExampleQuery(final Set<RuleAtom> rules, final Set<String> relations,
-      final String typeSubject, final String typeObject, final boolean subjectFunction, final boolean objectFunction) {
+                                                  final String typeSubject, final String typeObject, final boolean subjectFunction, final boolean objectFunction) {
 
     if (!(rules.size() > 0)) {
       return null;
     }
 
     String query = this.generateNegativeExampleUnionQuery(relations, typeSubject, typeObject, subjectFunction,
-        objectFunction, false);
+            objectFunction, false);
     query = query.substring(0, query.length() - 1) + " " + this.getHornRuleAtomQuery(rules) + " }";
 
     return query;
@@ -281,8 +281,8 @@ public abstract class SparqlExecutor {
       final String subject = getVariableSubstitution(atom.getSubject(), constant2variable, rules);
       final String object = getVariableSubstitution(atom.getObject(), constant2variable, rules);
       if (atom.getRelation().equals(Constant.GREATER_EQUAL_REL) || atom.getRelation().equals(Constant.LESS_EQUAL_REL)
-          || atom.getRelation().equals(Constant.GREATER_REL) || atom.getRelation().equals(Constant.LESS_REL)
-          || atom.getRelation().equals(Constant.EQUAL_REL)) {
+              || atom.getRelation().equals(Constant.GREATER_REL) || atom.getRelation().equals(Constant.LESS_REL)
+              || atom.getRelation().equals(Constant.EQUAL_REL)) {
         atomFilterBuilder.append("FILTER (?" + subject + atom.getRelation() + "?" + object + ") ");
         continue;
       }
@@ -318,18 +318,18 @@ public abstract class SparqlExecutor {
       if (isObjectMissing(atoms)) {
         if (createdVariable != null) {
           throw new RuleMinerException("Rule atoms contains neither " + HornRule.START_NODE + " nor "
-              + HornRule.END_NODE + " variables, cannot instantiate rule.", LOGGER);
+                  + HornRule.END_NODE + " variables, cannot instantiate rule.", LOGGER);
         }
         createdVariable = HornRule.END_NODE;
       }
       if (createdVariable == null) {
         // need to create a loose variable
         if (constant2variable.containsValue(HornRule.START_NODE)
-            || constant2variable.containsValue(HornRule.END_NODE)) {
+                || constant2variable.containsValue(HornRule.END_NODE)) {
           // cannot instantiate rule if subject (object) is missing and there is another constant
           throw new RuleMinerException("Rule atoms do not contain either " + HornRule.START_NODE + " or "
-              + HornRule.END_NODE + " variables, and there is another constant in the rule. Cannot instantiate rule.",
-              LOGGER);
+                  + HornRule.END_NODE + " variables, and there is another constant in the rule. Cannot instantiate rule.",
+                  LOGGER);
         }
         createdVariable = CONSTANT_SUBSTITUTION_VARIABLE + constant2variable.size();
       }
@@ -396,8 +396,8 @@ public abstract class SparqlExecutor {
       }
 
       if (atom.getRelation().equals(Constant.GREATER_EQUAL_REL) || atom.getRelation().equals(Constant.LESS_EQUAL_REL)
-          || atom.getRelation().equals(Constant.GREATER_REL) || atom.getRelation().equals(Constant.LESS_REL)
-          || atom.getRelation().equals(Constant.EQUAL_REL)) {
+              || atom.getRelation().equals(Constant.GREATER_REL) || atom.getRelation().equals(Constant.LESS_REL)
+              || atom.getRelation().equals(Constant.EQUAL_REL)) {
         inequalityFilter.append("FILTER (?" + subject + atom.getRelation() + "?" + object + ") ");
         continue;
       }
@@ -441,8 +441,8 @@ public abstract class SparqlExecutor {
   }
 
   public String generateNegativeExampleUnionQuery(final Set<String> relations, final String typeSubject,
-      final String typeObject, final boolean subjectFunction, final boolean objectFunction,
-      final boolean includeLimit) {
+                                                  final String typeObject, final boolean subjectFunction, final boolean objectFunction,
+                                                  final boolean includeLimit) {
     if ((relations == null) || (relations.size() == 0)) {
       return null;
     }
@@ -487,7 +487,7 @@ public abstract class SparqlExecutor {
     // if both true or false, include both
     if ((subjectFunction == false) && (objectFunction == false)) {
       negativeCandidateQuery += " {{?subject ?targetRelation ?realObject.} UNION "
-          + " {?realSubject ?targetRelation ?object.}} ";
+              + " {?realSubject ?targetRelation ?object.}} ";
     } else {
       if (subjectFunction) {
         negativeCandidateQuery += " ?subject ?targetRelation ?realObject. ";
@@ -498,7 +498,7 @@ public abstract class SparqlExecutor {
     }
 
     negativeCandidateQuery += "  ?subject ?otherRelation ?object. " + "  FILTER (" + filterRelation.toString() + ") "
-        + "  FILTER (" + filterNotRelation.toString() + ") " + differentRelation.toString();
+            + "  FILTER (" + filterNotRelation.toString() + ") " + differentRelation.toString();
 
     negativeCandidateQuery += "}";
 
@@ -521,7 +521,7 @@ public abstract class SparqlExecutor {
    * @return
    */
   public String generateNegativeExampleRestrictedQuery(final Set<String> relations, final String typeSubject,
-      final String typeObject, final boolean switchSubjectObject) {
+                                                       final String typeObject, final boolean switchSubjectObject) {
     if ((relations == null) || (relations.size() == 0)) {
       return null;
     }
@@ -556,8 +556,8 @@ public abstract class SparqlExecutor {
     }
 
     negativeCandidateQuery += " WHERE " + "{ ?object <" + typePrefix + "> <" + typeObject + ">." + "  ?subject <"
-        + typePrefix + "> <" + typeSubject + ">." + "  ?subject ?targetRelation ?realObject. "
-        + "  ?realSubject ?targetRelation ?object. ";
+            + typePrefix + "> <" + typeSubject + ">." + "  ?subject ?targetRelation ?realObject. "
+            + "  ?realSubject ?targetRelation ?object. ";
     if (switchSubjectObject) {
       negativeCandidateQuery += "  ?object ?otherRelation ?subject. ";
     } else {
@@ -565,7 +565,7 @@ public abstract class SparqlExecutor {
     }
 
     negativeCandidateQuery += "  FILTER (" + filterRelation.toString() + ") " + "  FILTER ("
-        + filterNotRelation.toString() + ") " + differentRelation.toString();
+            + filterNotRelation.toString() + ") " + differentRelation.toString();
 
     negativeCandidateQuery += "}";
 
@@ -573,7 +573,7 @@ public abstract class SparqlExecutor {
   }
 
   public String generateNegativeExtendedExampleQuery(final Set<String> relations, final String typeSubject,
-      final String typeObject) {
+                                                     final String typeObject) {
     if ((relations == null) || (relations.size() == 0)) {
       return null;
     }
@@ -604,16 +604,16 @@ public abstract class SparqlExecutor {
     }
 
     negativeCandidateQuery += " WHERE " + "{ ?object <" + typePrefix + "> <" + typeObject + ">." + "  ?subject <"
-        + typePrefix + "> <" + typeSubject + ">." + "  ?subject ?targetRelation ?realObject. "
-        + "  ?realSubject ?targetRelation ?object. " + "  FILTER (" + filterRelation.toString() + ") "
-        + "  FILTER NOT EXISTS {?subject ?relation ?object.} " + differentRelation.toString();
+            + typePrefix + "> <" + typeSubject + ">." + "  ?subject ?targetRelation ?realObject. "
+            + "  ?realSubject ?targetRelation ?object. " + "  FILTER (" + filterRelation.toString() + ") "
+            + "  FILTER NOT EXISTS {?subject ?relation ?object.} " + differentRelation.toString();
     negativeCandidateQuery += "}";
 
     return negativeCandidateQuery;
   }
 
   public String generateExampleWithRelationsQuery(final Set<String> relations, final String typeSubject,
-      final String typeObject) {
+                                                  final String typeObject) {
     if ((relations == null) || (relations.size() == 0)) {
       return null;
     }
@@ -643,42 +643,42 @@ public abstract class SparqlExecutor {
     // negativeCandidateQuery+=" FROM "+this.graphIri;
 
     negativeCandidateQuery += " WHERE " + "{ ?object <" + typePrefix + "> <" + typeObject + ">." + "  ?subject <"
-        + typePrefix + "> <" + typeSubject + ">." + "  ?subject ?targetRelation ?realObject. "
-        + "  ?realSubject ?targetRelation ?object. " + "  FILTER (" + filterRelation.toString() + ") "
-        + "  ?subject ?relation ?object.}";
+            + typePrefix + "> <" + typeSubject + ">." + "  ?subject ?targetRelation ?realObject. "
+            + "  ?realSubject ?targetRelation ?object. " + "  FILTER (" + filterRelation.toString() + ") "
+            + "  ?subject ?relation ?object.}";
 
     return negativeCandidateQuery;
   }
 
   public abstract int getSupportivePositiveExamples(Set<RuleAtom> rules, Set<String> relations, String typeSubject,
-      String typeObject, Set<Pair<String, String>> subject2objectConstant);
+                                                    String typeObject, Set<Pair<String, String>> subject2objectConstant);
 
   public abstract Set<Pair<String, String>> getMatchingPositiveExamples(Set<RuleAtom> rules, Set<String> relations,
-      String typeSubject, String typeObject, Set<Pair<String, String>> positiveExamples);
+                                                                        String typeSubject, String typeObject, Set<Pair<String, String>> positiveExamples);
 
   public abstract Set<Pair<String, String>> getMatchingNegativeExamples(Set<RuleAtom> rules, Set<String> relations,
-      String typeSubject, String typeObject, Set<Pair<String, String>> negativeExamples, boolean subjectFunction,
-      boolean objectFunction);
+                                                                        String typeSubject, String typeObject, Set<Pair<String, String>> negativeExamples, boolean subjectFunction,
+                                                                        boolean objectFunction);
 
   public abstract Map<String, Set<Pair<String, String>>> getRulePositiveSupport(
-      Set<Pair<String, String>> positiveExamples);
+          Set<Pair<String, String>> positiveExamples);
 
   public abstract Set<Pair<String, String>> executeHornRuleQuery(Set<RuleAtom> rules, String typeSubject,
-      String typeObject);
+                                                                 String typeObject);
 
   public abstract Set<Pair<String, String>> executeRestrictiveHornRuleQuery(String queryRestriction,
-      Set<RuleAtom> rules, String typeSubject, String typeObject);
+                                                                            Set<RuleAtom> rules, String typeSubject, String typeObject);
 
   public abstract int executeCountQuery(String inputQuery);
 
   public String generateHornRuleQuery(final Set<RuleAtom> rules, final String typeSubject, final String typeObject,
-      boolean selectAll) {
+                                      boolean selectAll) {
     return generateHornRuleQueryInstantiation(null, rules, typeSubject, typeObject, selectAll, false, -1);
   }
 
   public String generateHornRuleQueryInstantiation(final Set<String> targetPredicates, final Set<RuleAtom> rules,
-      final String typeSubject, final String typeObject, boolean selectAll, boolean positive,
-      int maxInstantiationNumber) {
+                                                   final String typeSubject, final String typeObject, boolean selectAll, boolean positive,
+                                                   int maxInstantiationNumber) {
 
     if (!(rules.size() > 0)) {
       return null;
@@ -924,7 +924,7 @@ public abstract class SparqlExecutor {
       query = StringUtils.join(query, "from ", this.graphIri, " ");
     }
     query = StringUtils.join(query, "where {?sub <", inputPredicate, "> ?obj. ?", variable,
-        " <" + this.typePrefix + "> ?", typeName, ".} GROUP BY ?", typeName, " ORDER BY DESC(?count)");
+            " <" + this.typePrefix + "> ?", typeName, ".} GROUP BY ?", typeName, " ORDER BY DESC(?count)");
     return query;
   }
 
@@ -1099,6 +1099,6 @@ public abstract class SparqlExecutor {
   }
 
   public abstract List<List<Pair<String, String>>> instantiateHornRule(Set<String> targetPredicates,
-      Set<RuleAtom> rules, String subjType, String objType, boolean positive, int maxInstantiationNumber);
+                                                                       Set<RuleAtom> rules, String subjType, String objType, boolean positive, int maxInstantiationNumber);
 
 }

@@ -39,7 +39,7 @@ public class ConfigurationFacility {
   }
 
   private static void initialiseConfiguration(String confFileName) {
-    BasicConfigurator.configure(new NullAppender());
+    BasicConfigurator.configure();
 
     Configuration config = null;
     String confLogMessage;

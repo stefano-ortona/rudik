@@ -72,7 +72,7 @@ public abstract class HornRuleDiscovery implements HornRuleDiscoveryInterface {
     }
 
   }
-
+ 
   @Override
   public abstract Map<HornRule, Double> discoverPositiveHornRules(Set<Pair<String, String>> negativeExamples,
       Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject);
