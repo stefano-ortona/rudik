@@ -89,6 +89,8 @@ wget http://downloads.dbpedia.org/2016-10/core/persondata_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/instance_types_transitive_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/specific_mappingbased_properties_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/infobox_properties_en.ttl.bz2
+wget http://downloads.dbpedia.org/2016-10/core/mappingbased_literals_en.ttl.bz2
+wget http://downloads.dbpedia.org/2016-10/core/mappingbased_objects_en.ttl.bz2
 ```
 
 - STEP 3 : Uncompress the files. In case you don't have bzip2 install it using "sudo apt install bzip2" The following commands will delete the bz2 files after uncompressing. In case you want to preserve the zip files, issue the command as bzip2 -dk <filename>.bz2
@@ -141,5 +143,5 @@ The APIs we currently expose are defined in the interface `asu.edu.rule_miner.ru
 # Contacts
 
 1. [Stefano Ortona](mailto:stefano.ortona@gmail.com)
-2. [Paolo Papotti](mailto:papotti@eurecom.fr)
+2. [Paolo Papotti](mailto:change-with.last-name_@eurecom.fr)
 3. [Vamsi Meduri](mailto.vamsikrishna1902@gmail.com)
