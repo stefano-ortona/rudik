@@ -89,6 +89,8 @@ wget http://downloads.dbpedia.org/2016-10/core/persondata_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/instance_types_transitive_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/specific_mappingbased_properties_en.ttl.bz2
 wget http://downloads.dbpedia.org/2016-10/core/infobox_properties_en.ttl.bz2
+wget http://downloads.dbpedia.org/2016-10/core/mappingbased_objects_en.ttl.bz2
+wget http://downloads.dbpedia.org/2016-10/core/mappingbased_literals_en.ttl.bz2
 ```
 
 - STEP 3 : Uncompress the files. In case you don't have bzip2 install it using "sudo apt install bzip2" The following commands will delete the bz2 files after uncompressing. In case you want to preserve the zip files, issue the command as bzip2 -dk <filename>.bz2
@@ -103,7 +105,7 @@ bzip2 -d infobox_properties_en.ttl.bz2
  - STEP 4 : Modify the virtuoso.ini file with the filepath to the ttl files and set the number of buffers based on available RAM. Copy the virtuoso.ini file into the virtuoso db directory
 
 ```sudo cp /etc/virtuoso-opensource-6.1/virtuoso.ini /var/lib/virtuoso-opensource-6.1/db/virtuoso.ini
-sudo cd /var/lib/virtuoso-opensource-6.1/db
+ cd /var/lib/virtuoso-opensource-6.1/db
 sudo vi virtuoso.ini
 ```
 
@@ -130,6 +132,23 @@ Driver: 06.01.3127 OpenLink Virtuoso ODBC Driver
 Done. -- 17 msec.
 SQL> rdf_loader_run();
 ```
+## Some useful tips
+
+### Checking file loading status
+To make sure that the loading succeeded check the table DB.DBA.load_list: 
+“ select * from DB.DBA.load_list; “
+The table DB.DBA.load_list can be used to check the list of data sets registered for loading, and the graph IRIs into which they will be or have been loaded. The ```ll_state field``` can have three values: 0 indicating the data set is to be loaded; 1 the data set load is in progress; or 2 the data set load is complete.
+
+On a multi-core machine, it is recommended that data sets be split into multiple files, and that these be registered in the DB.DBA.load_list table with the ld_dir() function. Since it’s the case here, once registered for load, the rdf_loader_run() function can be run multiple times, it is recommended a maximum of no cores / 2.5, to optimally parallelize the data load and hence maximize load speed.  
+It may also be useful to run regularly a checkpoint to commit all transactions to the database. 
+```SQL> checkpoint;```
+This is done automatically at the end of each data load (after a ```rdf_loader_run();```). However, it may append that Virtuoso crashes and that all the transactions are lost.
+
+### Restarting file loading 
+To force the loading of a file which ll_state is 1, we must return the ll_state field to 0 with the following command and then execute again ‘rdf_loader_run();’
+“update load_list set ll_state=0 where ll_file='[adresse/du/fichier]'; “
+Useful links about how to load Dbpedia data sets in virtuoso: http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoaderExampleDbpedia
+http://fr.dbpedia.org/doc/chargementVirtuoso.html
 
 Once the above steps are completed, the loader finishes and you are set to issue sparql queries in the client SQL terminal.
 
@@ -137,6 +156,52 @@ Once the above steps are completed, the loader finishes and you are set to issue
 # RuDiK APIs
 
 The APIs we currently expose are defined in the interface `asu.edu.rule_miner.rudik.rule_generator.HornRuleDiscoveryInterface`. The current implementation, explained in details in the technical report, is defined in the class `asu.edu.rule_miner.rudik.rule_generatorDynamicPruningRuleDiscovery`
+
+# RuDiK-GUI
+The following GUI is a <a href="https://www.dropwizard.io/1.3.5/docs/">Dropwizard </a> application and therefore follows a Dropwizard application structure. 
+
+## Getting started
+These instructions will get you a copy of the project up and running on your local machine for testing purposes.
+Please note that some browsers like ```Mozilla Firefox``` and ```Microsoft Edge``` do not support all the tools used to build the GUI. Therefore, to have a good experience with this version of the GUI, please use ```Google Chrome```.
+
+### STEP 1: 
+Clone the git project: ```git clone https://github.com/lionelsome/RuDiK-GUI.git```;
+
+### STEP 2: 
+Build the project. Inside the project folder: run ```mvn -U clean package -DskipTests```;
+
+### STEP 3: 
+The following Web application works primarily with Virtuoso installed locally and available at localhost:8890/sparql (the parameter "Sparql endpoint" allows to choose the endpoint we want to query). Therefore, make sure the Virtuoso server is started (see above):
+ ```cd /var/lib/virtuoso-opensource-6.1/db
+ sudo /usr/bin/virtuoso-t -f 
+ ```
+ 
+### STEP 4: 
+Compile and laugh the application. Inside the project folder run:
+```java -jar target/rule_miner-0.0.1-SNAPSHOT.jar server rudik.yml``` where rudik.yml is the application’s configuration file. 
+In your web browser, go to ```localhost:9090/rudik``` and start the adventure with Rudik!
+
+## How to use it ?
+
+### Discover new rules : 
+It allows to run RuDiK against the selected knowledge base in order to find new rules related to the selected predicate.
+Select first the ```Type of rule``` and then the ```Knowledge Graph``` (KG). Depending on the KG, a list of predicates are suggested : you can either select one of them or enter another predicate that exists in the KG in ```Target predicate```(since no check is made on the correctness of the typed predicate, make sure it does exist).<br>
+In the ```More options```, select the ```Sparql endpoint``` you want to use based on your installation (whether you have Virtuoso installed or not) and the KG that you selected. There are other parameters that can be changed there. Please refer to github mentioned above for more details.<br>
+Click on ```Run``` in the ```Main parameters``` card and wait for RuDiK to make the job. <br>
+You can see the Generation and Validation set (refer to the technical report for more details) of examples of each rule and also a Sankey diagram with all the rules and their corresponding Generation and validation Set. For each example, the ```Graph``` button allows to show a surrounding graph.
+This GUI also gives you the possibility to instantiate the discovered rules. 
+
+N.B: You can hover over each parameter to get a description.
+
+### Instantiate a rule
+Select a KG and the corresponding ```Sparql endpoint```. According to the selected KG, a list of rules to instantiate are suggested. Select one of them or enter your own rule you want to instantiate.<br>
+Here, you can also have a surrounding graph for the literals involved in the instantiation. 
+
+## Built With
+
+* [Dropwizard](http://www.dropwizard.io/1.3.5/docs/) (1.3.5 or above) - The web framework used
+* [Maven](https://maven.apache.org/) (3.2 or above) - Dependency Management
+
 
 # Contacts
 
