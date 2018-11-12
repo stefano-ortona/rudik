@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <rule_miner xml:space="preserve">
-	<logfile>src/main/config/DefaultLog4j.properties</logfile>
+<logfile>src/main/config/DefaultLog4j.properties</logfile>
 	<naive>
 	    <!-- specify here runtime parameters of the rule generation algorithms -->
 		<runtime>
@@ -13,7 +13,7 @@
 				<validation_threshold>0.2</validation_threshold>
 				<!-- set weights for the score computation. Default 0.3, 0.6, 0.1 -->
 				<alpha>0.3</alpha>
-				<beta>0.6</beta>
+				<beta>0.7</beta>
 				<gamma>0.1</gamma>
 			</score>
 		</runtime>
@@ -26,7 +26,7 @@
 <!-- 			</parameters> -->
 			<class>asu.edu.rule_miner.rudik.sparql.jena.remote.QuerySparqlRemoteEndpoint</class>
 			<parameters>
-				<sparql_endpoint>http://localhost:8890/sparql</sparql_endpoint>
+				<sparql_endpoint>https://linkeddata1.calcul.u-psud.fr/sparql</sparql_endpoint>
 			</parameters>
 <!-- 			<class>asu.edu.neg_rule_miner.sparql.jena.tbd.QueryJenaRDFAPI</class> -->
 <!-- 			<parameters> -->
@@ -41,8 +41,8 @@
 <!-- 					</parameters> -->
 <!-- 				</sparql_back_up> -->
 <!-- 			</parameters> -->
-			<graph_iri>http://yago-knowledge.org</graph_iri>
-			<!-- prefix to be specified in the sparql query -->
+            <graph_iri></graph_iri>
+            <!-- prefix to be specified in the sparql query -->
 			<relation_prefix>
 				<prefix>
 					<name>rdf</name>
@@ -70,9 +70,9 @@
 				</edges>
 				<examples>
 					<!-- Limit positive examples. -1 for unlimited -->
-					<positive>-1</positive>
+					<positive>100</positive>
 					<!-- Limit negative examples. -1 for unlimited -->
-					<negative>-1</negative>
+					<negative>100</negative>
 				</examples>
 			</limits>
 			<include_literals>true</include_literals>

@@ -1,0 +1,37 @@
+package asu.edu.rule_miner.rudik.resources;
+
+import asu.edu.rule_miner.rudik.views.ExamplesView;
+
+import com.codahale.metrics.annotation.Timed;
+import javax.ws.rs.GET;
+import org.apache.commons.lang3.tuple.Pair;
+import java.util.*;
+import java.io.*;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
+
+@Path("/examples")
+@Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_JSON})
+/*@Produces(MediaType.APPLICATION_JSON)*/
+/*
+public class ExamplesResource {
+
+    public ExamplesResource() {
+
+             }
+
+    @GET
+    @Timed
+public ExamplesView ExamplesPage( @QueryParam("gen_examples") List<String> gen_examples, 
+				  @QueryParam("val_examples") List<String> val_examples, 
+ 		                  @QueryParam("instantiatedRule") String instantiatedRule) {
+
+        return new ExamplesView(gen_examples, val_examples, instantiatedRule);
+ }
+
+ }
+*/

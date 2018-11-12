@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -16,7 +15,6 @@ import asu.edu.rule_miner.rudik.api.model.HornRuleResult.RuleType;
 import asu.edu.rule_miner.rudik.api.model.RudikResult;
 import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
 import asu.edu.rule_miner.rudik.configuration.ConfigurationParameterConfigurator;
-import asu.edu.rule_miner.rudik.configuration.Constant;
 import asu.edu.rule_miner.rudik.model.horn_rule.HornRule;
 import asu.edu.rule_miner.rudik.model.horn_rule.RuleAtom;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Edge;
@@ -35,9 +33,6 @@ public class RudikApiUsage {
     API = new RudikApi("src/main/config/DbpediaConfiguration.xml", 5 * 60); // timeout set to 5 minutes
     // set the max number of instantiated facts to generate when executing rules against the KB
     API.setMaxInstantiationNumber(500);
-
-    // set maximum rules length
-    API.setMaxRuleLength(3);
   }
 
   @Before
@@ -46,6 +41,7 @@ public class RudikApiUsage {
     // NOTE: after you set the parameters, the parameters will keep the new set values
     ConfigurationParameterConfigurator.setAlphaParameter(0.3);
     ConfigurationParameterConfigurator.setBetaParameter(0.7);
+    ConfigurationParameterConfigurator.setMaxRuleLength(2);
 
     // set maximum number of positive/negative examples - randomly selected
     ConfigurationParameterConfigurator.setPositiveExamplesLimit(15);
@@ -65,7 +61,7 @@ public class RudikApiUsage {
     // like this we can compute positive rules giving a target predicate - target predicate must contain the full name
     final String targetPredicate = "http://dbpedia.org/ontology/spouse";
     // use discoverNegativeRules to discover negative rules
-    final RudikResult result = API.discoverPositiveRules(targetPredicate);
+    final RudikResult result = API.discoverPositiveRules(targetPredicate,20,20);
 
     // The following shows how to inspect the result
     // iterate all over discovered results
@@ -156,42 +152,6 @@ public class RudikApiUsage {
   }
 
   @Test
-  public void instantiateRuleWithConstants() {
-    // this reads a rule in the form of string, converts it to a HornRule, and instantiate over the KB
-    // the rule in the form of string
-    final String ruleString = "http://dbpedia.org/ontology/spouse(http://dbpedia.org/resource/Barbara_Henrickson,subject) & http://dbpedia.org/ontology/child(http://dbpedia.org/resource/Barbara_Henrickson,object)";
-    // the target predicate
-    final String targetPredicate = "http://dbpedia.org/ontology/spouse";
-    // the rule type
-    final RuleType type = RuleType.negative;
-    // parse and create the HornRule
-    final HornRule rule = HornRule.createHornRule(ruleString);
-    // instantiate rule and create the result
-    final RudikResult result = API.instantiateSingleRule(rule, targetPredicate, type);
-    Assert.assertNotNull(result);
-    // see testComputeRules on how to inspect and use the result
-    final Graph<String> sorGraph = result.getResults().get(0).getSorroundingGraph();
-  }
-
-  @Test
-  public void instantiateNegativeRule() {
-    // this reads a rule in the form of string, converts it to a HornRule, and instantiate over the KB
-    // the rule in the form of string
-    final String ruleString = "http://dbpedia.org/ontology/foundingYear(subject,v0) & http://dbpedia.org/ontology/birthDate(object,v1) & >(v1,v0)";
-    // the target predicate
-    final String targetPredicate = "http://dbpedia.org/ontology/foundedBy";
-    // the rule type
-    final RuleType type = RuleType.negative;
-    // parse and create the HornRule
-    final HornRule rule = HornRule.createHornRule(ruleString);
-    // instantiate rule and create the result
-    final RudikResult result = API.instantiateSingleRule(rule, targetPredicate, type);
-    Assert.assertNotNull(result);
-    // see testComputeRules on how to inspect and use the result
-    final Graph<String> sorGraph = result.getResults().get(0).getSorroundingGraph();
-  }
-
-  @Test
   public void getAllKBRelations() {
     // get all relations from DBpedia KB
     Collection<String> allRelations = API.getAllKBRelations();
@@ -206,31 +166,6 @@ public class RudikApiUsage {
     for (final String oneRel : allRelations) {
       System.out.println("Found a relation from the KB: " + oneRel);
     }
-  }
-
-  @Test
-  public void getOntologyPrefixAndGenericType() {
-    final Configuration config = ConfigurationFacility.getConfiguration().subset(Constant.CONF_SPARQL_ENGINE);
-    final String relationPrefix = config.getString(Constant.CONF_RELATION_TARGET_REFIX);
-    final String mostGenericType = config.getString(Constant.CONF_GENERIC_TYPES);
-    Assert.assertEquals("http://dbpedia.org/ontology/", relationPrefix);
-    Assert.assertEquals("http://dbpedia.org/ontology/Agent", mostGenericType);
-  }
-
-  @Test
-  public void testComputeRulesYago() {
-    // like this we can compute positive rules giving a target predicate - target predicate must contain the full name
-    final String targetPredicate = "http://yago-knowledge.org/resource/hasChild";
-    // use discoverNegativeRules to discover negative rules
-    final RudikApi api = new RudikApi("src/main/config/YagoConfiguration.xml", 5 * 60);
-    api.setMaxRuleLength(2);
-    api.setMaxInstantiationNumber(500);
-    // set maximum number of positive/negative examples - randomly selected
-    ConfigurationParameterConfigurator.setPositiveExamplesLimit(15);
-    ConfigurationParameterConfigurator.setNegativeExamplesLimit(15);
-
-    final RudikResult result = api.discoverPositiveRules(targetPredicate);
-    Assert.assertFalse(result.getResults().isEmpty());
   }
 
 }
