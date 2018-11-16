@@ -17,16 +17,16 @@ For a full technical report of RuDik and the algorithms involved, please refer t
  
 ## System Requirements
 
-- Maven 3.2 or above
+- Gradle >=4.10 
 - Java 1.8 or above
 
 ## Installation
 
 - Checkout git project `git clone git@github.com:stefano-ortona/rudik.git`
-- Install all maven dependency:
+- Install all dependencies:
   - Inside the project folder, run `mvn -U clean install -DskipTests`
 
-If the above commands run without errors, then you are ready to run your first example
+If the above commands are completed without errors, you are ready to run your first example
 
 ## Run Spouse Example
 
