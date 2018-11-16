@@ -4,3 +4,6 @@
 .settings/
 /logs/
 .DS_Store
+.idea
+.gradle
+*.iml
