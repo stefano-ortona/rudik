@@ -4,6 +4,7 @@ import java.util.*;
 
 import asu.edu.rule_miner.rudik.configuration.Constant;
 import asu.edu.rule_miner.rudik.rule_generator.examples_sampling.VariancePopularSampling;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
@@ -41,15 +42,13 @@ public class RudikApi {
    * @param timeout - timeout, in seconds, to specify the max waiting time for each operation. If an operation takes longer
    * than the timeout, then the operation is killed and it returns an empty result
    */
-  public RudikApi(final String filePath, int timeout, float alpha, float beta, float gamma, String samp) {
-      boolean applySampling=false;
+  public RudikApi(final String filePath, int timeout, float alpha, float beta, float gamma, boolean sample) {
     ConfigurationFacility.setConfigurationFile(filePath);
     initialiseObjects(timeout);
     //initialize sampling with the parameters selected through the API with a subject and object weight of 0.5
-    if ("on".equals(samp)) {applySampling=true;}
     sampling = new VariancePopularSampling(alpha, beta, gamma,
               0.5, 0.5, getSparqlExecutor().getSubjectLimit(),
-              getSparqlExecutor().getObjectLimit(), applySampling);
+              getSparqlExecutor().getObjectLimit(), sample);
   }
 
   //constructor for instantiating a rule
