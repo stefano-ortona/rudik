@@ -70,6 +70,7 @@ public class RudikApi {
         float alpha = config.getFloat("naive.runtime.score.alpha");
         float beta = config.getFloat("naive.runtime.score.beta");
         float gamma = config.getFloat("naive.runtime.score.gamma");
+        String samplingPath = config.getString("sampling_path");
 
         ConfigurationFacility.setConfigurationFile(filePath);
         this.maxInstantiationNumber = maxInstantiationNumber;
@@ -78,7 +79,7 @@ public class RudikApi {
         //initialize sampling with the parameters selected through the API with a subject and object weight of 0.5
         sampling = new VariancePopularSampling(alpha, beta, gamma,
                 0.5, 0.5, getSparqlExecutor().getSubjectLimit(),
-                getSparqlExecutor().getObjectLimit(), sample);
+                getSparqlExecutor().getObjectLimit(), sample, samplingPath);
     }
 
     /**
@@ -89,14 +90,20 @@ public class RudikApi {
      * @param timeout  - timeout, in seconds, to specify the max waiting time for each operation. If an operation takes longer
      *                 than the timeout, then the operation is killed and it returns an empty result
      */
-    public RudikApi(final String filePath, int timeout, float alpha, float beta, float gamma, boolean sample) {
+    public RudikApi(final String filePath,
+                    int timeout,
+                    float alpha,
+                    float beta,
+                    float gamma,
+                    boolean sample,
+                    final String samplePath) {
         ConfigurationFacility.setConfigurationFile(filePath);
 
         initialiseObjects(timeout);
         //initialize sampling with the parameters selected through the API with a subject and object weight of 0.5
         sampling = new VariancePopularSampling(alpha, beta, gamma,
                 0.5, 0.5, getSparqlExecutor().getSubjectLimit(),
-                getSparqlExecutor().getObjectLimit(), sample);
+                getSparqlExecutor().getObjectLimit(), sample, samplePath);
     }
 
     //constructor for instantiating a rule
