@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <rule_miner xml:space="preserve">
 	<logfile>src/main/config/DefaultLog4j.properties</logfile>
+	<sampling_path>src/main/resources/statsPerEntity.txt</sampling_path>
 	<naive>
 	    <!-- specify here runtime parameters of the rule generation algorithms -->
 		<runtime>
