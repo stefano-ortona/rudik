@@ -26,7 +26,7 @@
 <!-- 			</parameters> -->
 			<class>asu.edu.rule_miner.rudik.sparql.jena.remote.QuerySparqlRemoteEndpoint</class>
 			<parameters>
-				<sparql_endpoint>http://localhost:8890/sparql</sparql_endpoint>
+				<sparql_endpoint>http://dbpedia.org/sparql</sparql_endpoint>
 			</parameters>
 <!-- 			<class>asu.edu.neg_rule_miner.sparql.jena.tbd.QueryJenaRDFAPI</class> -->
 <!-- 			<parameters> -->
@@ -88,7 +88,7 @@
 			<include_literals>true</include_literals>
 		</sparql>
 		<disequality_relation>
-				<!-- number of types two entities must have in common to be considered of the same type. 
+				<!-- number of types two entities must have in common to be considered of the same type.
 					 0=all types, -1=two different entities are never considered of the same types. -1 implies rules != will never induced -->
 				<equality_types_number>0</equality_types_number>
 		</disequality_relation>
