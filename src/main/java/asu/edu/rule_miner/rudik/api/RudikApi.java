@@ -46,6 +46,19 @@ public class RudikApi {
      * @param sample   - if sampling should be used or not
      */
     public RudikApi(final String filePath, int timeout, boolean sample) {
+        this(filePath, timeout, sample, 1000);
+    }
+
+    /**
+     * Initialize RudikApi with a specific configuration file that contains all parameters used by RuDiK
+     *
+     * @param filePath - the configuration file to be used
+     * @param timeout  - timeout, in seconds, to specify the max waiting time for each operation. If an operation takes longer
+     *                 than the timeout, then the operation is killed and it returns an empty result
+     * @param sample   - if sampling should be used or not
+     * @param maxInstantiationNumber - that maximum number of instances that can be created
+     */
+    public RudikApi(final String filePath, int timeout, boolean sample, int maxInstantiationNumber) {
 
         XMLConfiguration config = null;
         try {
@@ -59,6 +72,7 @@ public class RudikApi {
         float gamma = config.getFloat("naive.runtime.score.gamma");
 
         ConfigurationFacility.setConfigurationFile(filePath);
+        this.maxInstantiationNumber = maxInstantiationNumber;
         initialiseObjects(timeout);
 
         //initialize sampling with the parameters selected through the API with a subject and object weight of 0.5
