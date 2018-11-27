@@ -206,5 +206,5 @@ Here, you can also have a surrounding graph for the literals involved in the ins
 # Contacts
 
 1. [Stefano Ortona](mailto:stefano.ortona@gmail.com)
-2. [Paolo Papotti](mailto:papotti@eurecom.fr)
+2. [Paolo Papotti](mailto:change-with.last-name_@eurecom.fr)
 3. [Vamsi Meduri](mailto.vamsikrishna1902@gmail.com)
