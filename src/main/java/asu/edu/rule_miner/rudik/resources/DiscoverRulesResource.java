@@ -54,36 +54,36 @@ public class DiscoverRulesResource {
 
     }
 
-    @GET
-    @Timed
-public DiscoverRulesView discoverNewRules(@QueryParam("rulesType") String rulesType,
-                      @QueryParam("predicate") String predicate,
-                      @QueryParam("kg") String kg,
-                      @QueryParam("alpha") String alphaS,
-                      @QueryParam("gamma") String gammaS,
-                      @QueryParam("endpoint") String endpoint,
-                      @QueryParam("nb_pos") String nb_posS,
-                      @QueryParam("nb_neg") String nb_negS,
-                      @QueryParam("sub_edges") String sub_edgesS,
-                      @QueryParam("obj_edges") String obj_edgesS,
-                      @QueryParam("max_rule_length") String max_rule_lengthS,
-                      @QueryParam("includeLiterals") String includeLiteralsS,
-                      @QueryParam("sampling") String sampling) {
-
-        //launching the API for the specific knowlegde graph with a maximum number of 10 instantiations and 5 mins of timeout
-        final DiscoverNewRules functions = new DiscoverNewRules(kg, 10, 5*60, Float.valueOf(alphaS),1-Float.valueOf(alphaS),Float.valueOf(gammaS),sampling);
-        //update the config file by setting the new parameters values
-        functions.setConfigurationParameters(alphaS, nb_posS, nb_negS, max_rule_lengthS, sub_edgesS, obj_edgesS, endpoint, includeLiteralsS);
-
-        //retrieve the examples to be used in the next methods
-        gen_examples_dict=functions.getGen_examples_dict();
-        val_examples_dict=functions.getVal_examples_dict();
-        API=functions.getAPI();
-        this.predicate=functions.getPredicate();
-        rulesAtomsDict=functions.getRulesAtomsDict();
-
-        return new DiscoverRulesView(functions.discoverRules(kg, rulesType, predicate,Integer.valueOf(nb_posS),Integer.valueOf(nb_negS)), kg, endpoint);
- }
+//    @GET
+//    @Timed
+//public DiscoverRulesView discoverNewRules(@QueryParam("rulesType") String rulesType,
+//                      @QueryParam("predicate") String predicate,
+//                      @QueryParam("kg") String kg,
+//                      @QueryParam("alpha") String alphaS,
+//                      @QueryParam("gamma") String gammaS,
+//                      @QueryParam("endpoint") String endpoint,
+//                      @QueryParam("nb_pos") String nb_posS,
+//                      @QueryParam("nb_neg") String nb_negS,
+//                      @QueryParam("sub_edges") String sub_edgesS,
+//                      @QueryParam("obj_edges") String obj_edgesS,
+//                      @QueryParam("max_rule_length") String max_rule_lengthS,
+//                      @QueryParam("includeLiterals") String includeLiteralsS,
+//                      @QueryParam("sampling") String sampling) {
+//
+//        //launching the API for the specific knowlegde graph with a maximum number of 10 instantiations and 5 mins of timeout
+//        // final DiscoverNewRules functions = new DiscoverNewRules(kg, 10, 5*60, Float.valueOf(alphaS),1-Float.valueOf(alphaS),Float.valueOf(gammaS),sampling);
+//        //update the config file by setting the new parameters values
+//        functions.setConfigurationParameters(alphaS, nb_posS, nb_negS, max_rule_lengthS, sub_edgesS, obj_edgesS, endpoint, includeLiteralsS);
+//
+//        //retrieve the examples to be used in the next methods
+//        gen_examples_dict=functions.getGen_examples_dict();
+//        val_examples_dict=functions.getVal_examples_dict();
+//        API=functions.getAPI();
+//        this.predicate=functions.getPredicate();
+//        rulesAtomsDict=functions.getRulesAtomsDict();
+//
+//        return new DiscoverRulesView(functions.discoverRules(kg, rulesType, predicate,Integer.valueOf(nb_posS),Integer.valueOf(nb_negS)), kg, endpoint);
+// }
 
 @GET 
 @Path("/examples")
