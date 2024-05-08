@@ -39,18 +39,18 @@ public class DiscoverNewRules {
 
     private Map<String, List<String>> val_examples_dict;
 
-    public DiscoverNewRules(String endpoint, int maxInst, int timeout, float alpha, float beta, float gamma,String sampling) {
-        String filepath;
-        if ("dbpedia".equals(endpoint)) {
-            filepath= "src/main/config/Configuration.xml";
-        } else {filepath="src/main/config/YagoConfiguration.xml"; }
-        API = new RudikApi(filepath, timeout, alpha, beta, gamma, sampling);
-        // set the max number of instantiated facts to generate when executing rules against the KB
-        API.setMaxInstantiationNumber(maxInst);
-        gen_examples_dict = new HashMap<>();
-        val_examples_dict = new HashMap<>();
-        rulesAtomsDict = new LinkedHashMap();
-    }
+//    public DiscoverNewRules(String endpoint, int maxInst, int timeout, float alpha, float beta, float gamma, String sampling) {
+//        String filepath;
+//        if ("dbpedia".equals(endpoint)) {
+//            filepath= "src/main/config/Configuration.xml";
+//        } else {filepath="src/main/config/YagoConfiguration.xml"; }
+//        API = new RudikApi(filepath, timeout, alpha, beta, gamma, sampling);
+//        // set the max number of instantiated facts to generate when executing rules against the KB
+//        API.setMaxInstantiationNumber(maxInst);
+//        gen_examples_dict = new HashMap<>();
+//        val_examples_dict = new HashMap<>();
+//        rulesAtomsDict = new LinkedHashMap();
+//    }
 
     public Map<String, List<String>> getGen_examples_dict(){return gen_examples_dict;}
 

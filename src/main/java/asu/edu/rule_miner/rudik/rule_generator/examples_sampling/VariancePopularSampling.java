@@ -33,14 +33,28 @@ public class VariancePopularSampling {
     double alpha, beta, gamma, subWeight, objWeight;
 	int subjectLimit, objectLimit;
 	boolean isTopK; // to indicate whether it is topK sampling or uniform sampling
+	String filePath;
 	
 	public VariancePopularSampling(double alpha, double beta, double gamma, double subWeight, double objWeight, int subjectLimit, int objectLimit, boolean isTopK){
+		this(alpha, beta, gamma, subWeight, objWeight, subjectLimit, objectLimit, isTopK, "src/main/resources/statsPerEntity.txt");
+	}
+
+	public VariancePopularSampling(double alpha,
+								   double beta,
+								   double gamma,
+								   double subWeight,
+								   double objWeight,
+								   int subjectLimit,
+								   int objectLimit,
+								   boolean isTopK,
+								   String filePath) {
 		this.alpha = alpha;
 		this.beta = beta;
 		this.gamma = gamma;
 		this.subWeight = subWeight;
 		this.objWeight = objWeight;
 		this.isTopK = isTopK;
+		this.filePath = filePath;
 		if(subjectLimit < 0)
 			this.subjectLimit = 2; // only for the computation of functionality, doesn't effect the example generation for actual in-degree & out-degree
 //			this.subjectLimit = (int)Double.POSITIVE_INFINITY;
@@ -144,7 +158,7 @@ public class VariancePopularSampling {
 		// a list of double containing the metrics for each entity. It will be added in statsPerEntity
 		List<Double> stats = new ArrayList<>();
 		try {
-			FileInputStream fileIn = new FileInputStream("src/main/resources/statsPerEntity.txt");
+			FileInputStream fileIn = new FileInputStream(this.filePath);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			statsPerEntity =  (HashMap<String, List<Double>>) in.readObject();
 			in.close();
@@ -312,12 +326,13 @@ public class VariancePopularSampling {
 		}
 //store statsPerEntity in a file
 		try {
-			FileOutputStream fileOut = new FileOutputStream("src/main/resources/statsPerEntity.txt");
+			FileOutputStream fileOut = new FileOutputStream(this.filePath);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(statsPerEntity);
 			out.close();
 			fileOut.close();
-            LOGGER.info("Serialized data is saved in src/main/resources/statsPerEntity.txt");
+            LOGGER.info(String.format("Serialized data is saved in %s",
+					this.filePath));
 		} catch (IOException i) {
 			i.printStackTrace();
 		}
